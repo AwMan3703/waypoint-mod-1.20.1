@@ -2,12 +2,18 @@ package com.awman.waypointmod.util;
 
 import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
+import java.util.HashMap;
+
 public class StateSaverAnLoader extends PersistentState {
+
+    public WaypointData waypointData;
+
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         return nbt;
