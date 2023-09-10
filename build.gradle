@@ -24,7 +24,6 @@ loom {
 	mods {
 		"waypoint-mod" {
 			sourceSet sourceSets.main
-			sourceSet sourceSets.client
 		}
 	}
 

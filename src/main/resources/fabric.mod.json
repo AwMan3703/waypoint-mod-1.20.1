@@ -15,8 +15,7 @@
 	"icon": "assets/waypoint-mod/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"main": [],
-		"server": [
+		"main": [
 			"com.awman.waypointmod.WaypointMod"
 		]
 	},
