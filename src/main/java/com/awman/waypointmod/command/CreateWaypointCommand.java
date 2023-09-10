@@ -36,8 +36,6 @@ public class CreateWaypointCommand {
         StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getServer());
         serverState.waypointMap.put(waypointId, new WaypointData(author, position, dimension));
 
-        StateSaverAnLoader stateSaverAnLoader = StateSaverAnLoader.getServerState(context.getSource().getServer());
-
         return 1;
     }
 }

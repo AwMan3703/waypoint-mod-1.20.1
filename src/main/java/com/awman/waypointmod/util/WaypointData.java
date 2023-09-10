@@ -1,5 +1,6 @@
 package com.awman.waypointmod.util;
 
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

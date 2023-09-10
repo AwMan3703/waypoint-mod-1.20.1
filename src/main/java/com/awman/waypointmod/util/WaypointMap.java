@@ -68,7 +68,7 @@ public class WaypointMap extends HashMap<String, WaypointData> {
             waypointDataCompound.putIntArray(WaypointData.POSITION_NBT_KEY,
                     new int[]{ waypointData.coordinates.getX(), waypointData.coordinates.getY(), waypointData.coordinates.getZ() });
             waypointDataCompound.putString(WaypointData.DIMENSION_NBT_KEY,
-                    waypointData.dimension.());
+                    waypointData.dimension.);
 
             // Finally, add this entry to the main compound
             nbt.put(waypointName, waypointDataCompound);
