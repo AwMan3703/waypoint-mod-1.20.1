@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 public class StateSaverAnLoader extends PersistentState {
 
-    public WaypointData waypointData;
+    public WaypointMap waypointMap;
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {

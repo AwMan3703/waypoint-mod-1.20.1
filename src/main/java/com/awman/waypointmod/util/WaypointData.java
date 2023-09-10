@@ -3,6 +3,8 @@ package com.awman.waypointmod.util;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
 
 public class WaypointData {
 
@@ -18,5 +20,11 @@ public class WaypointData {
     public BlockPos coordinates;
 
     // The dimension this waypoint applies to
-    public RegistryKey<World> dimension;
+    public DimensionType dimension;
+
+    public WaypointData(String author, BlockPos position, DimensionType dimension) {
+        this.author = author;
+        this.coordinates = position;
+        this.dimension = dimension;
+    }
 }
