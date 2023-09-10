@@ -28,11 +28,10 @@ public class CreateWaypointCommand {
                         .executes(context -> run(context,
                                 StringArgumentType.getString(context, "waypoint_id"),
                                 BlockPosArgumentType.getBlockPos(context, "position"),
-                                IdentifierArgumentType.getIdentifier(context, "dimension"))))))));
-//                                DimensionArgumentType.getDimensionArgument(context, "dimension").getDimension())))))));
+                                DimensionArgumentType.getDimensionArgument(context, "dimension").getDimension())))))));
     }
 
-    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, Identifier dimension){// DimensionType dimension) {
+    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, DimensionType dimension){// DimensionType dimension) {
         final String author = context.getSource().getName();
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toString() + " in dimension \"" + dimension.toString() + "\"..."));
 
