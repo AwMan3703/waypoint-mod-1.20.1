@@ -34,12 +34,12 @@ public class WaypointMap extends HashMap<String, WaypointData> {
 
             // Extract the dimension String, then convert it to a RegistryKey<World>
             String stringDim = waypointDataCompound.getString(WaypointData.DIMENSION_NBT_KEY);
-            DimensionType dimension = DimensionType.;
+            //DimensionType dimension = DimensionType.;
 
             // Populate a WaypointData object with the retrieved data
-            WaypointData waypointData = new WaypointData(author, position, dimension);
+            //WaypointData waypointData = new WaypointData(author, position, dimension);
             // Add said object to the WaypointMap
-            waypointMap.put(waypointName, waypointData);
+            //waypointMap.put(waypointName, waypointData);
         }
 
         return waypointMap;
@@ -67,9 +67,9 @@ public class WaypointMap extends HashMap<String, WaypointData> {
                     waypointData.author);
             waypointDataCompound.putIntArray(WaypointData.POSITION_NBT_KEY,
                     new int[]{ waypointData.coordinates.getX(), waypointData.coordinates.getY(), waypointData.coordinates.getZ() });
-            waypointDataCompound.putString(WaypointData.DIMENSION_NBT_KEY,
+            /*waypointDataCompound.putString(WaypointData.DIMENSION_NBT_KEY,
                     waypointData.dimension.);
-
+*/
             // Finally, add this entry to the main compound
             nbt.put(waypointName, waypointDataCompound);
         }
