@@ -13,7 +13,7 @@ import java.util.HashMap;
 // I know what i'm doing :clueless:
 public class StateSaverAnLoader extends PersistentState {
 
-    public WaypointMap waypointMap;
+    public WaypointMap waypointMap = new WaypointMap();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {

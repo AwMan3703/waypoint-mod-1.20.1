@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class WaypointMap extends HashMap<String, WaypointData> {
 
-    public static final String NBT_STORAGE_KEY = new Identifier(WaypointMod.MOD_ID, "waypointMap").toString();
+    public static final String NBT_STORAGE_KEY = WaypointMod.MOD_ID + "_waypointMap";
 
     public void insert(String key, WaypointData content) {
         this.put(key, content);
