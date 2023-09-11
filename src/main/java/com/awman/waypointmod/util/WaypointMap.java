@@ -29,19 +29,9 @@ public class WaypointMap extends HashMap<String, WaypointData> {
             // Get the entry's content compound
             NbtCompound waypointDataCompound = nbt.getCompound(waypointName);
 
-            // Extract the author String
-            String author = waypointDataCompound.getString(WaypointData.AUTHOR_NBT_KEY);
+            // Create a WaypointData object with the retrieved data
+            WaypointData waypointData = WaypointData.fromNbt(waypointDataCompound);
 
-            // Extract the position array, then convert it to a BlockPos
-            int[] arrayPos = waypointDataCompound.getIntArray(WaypointData.POSITION_NBT_KEY);
-            BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
-
-            // Extract the dimension String, then convert it to a RegistryKey<World>
-            String[] stringDim = waypointDataCompound.getString(WaypointData.DIMENSION_NBT_KEY).split(":");
-            RegistryKey<World> dimension = RegistryKey.of(RegistryKey.of(Registries.DIMENSION_TYPE, new Identifier(stringDim[0], stringDim[1])));
-
-            // Populate a WaypointData object with the retrieved data
-            WaypointData waypointData = new WaypointData(author, position, dimension);
             // Add said object to the WaypointMap
             waypointMap.put(waypointName, waypointData);
         }
@@ -62,17 +52,8 @@ public class WaypointMap extends HashMap<String, WaypointData> {
             String waypointName = entry.getKey();
             WaypointData waypointData = entry.getValue();
 
-            // Create an empty compound for this entry
-            NbtCompound waypointDataCompound = new NbtCompound();
-
-            // Convert the WaypointData properties to basic types,
-            // then populate the compound
-            waypointDataCompound.putString(WaypointData.AUTHOR_NBT_KEY,
-                    waypointData.author);
-            waypointDataCompound.putIntArray(WaypointData.POSITION_NBT_KEY,
-                    new int[]{ waypointData.coordinates.getX(), waypointData.coordinates.getY(), waypointData.coordinates.getZ() });
-            waypointDataCompound.putString(WaypointData.DIMENSION_NBT_KEY,
-                    waypointData.dimension.getValue().toString());
+            // Convert the data to Nbt
+            NbtCompound waypointDataCompound = waypointData.toNbt();
 
             // Finally, add this entry to the main compound
             nbt.put(waypointName, waypointDataCompound);
