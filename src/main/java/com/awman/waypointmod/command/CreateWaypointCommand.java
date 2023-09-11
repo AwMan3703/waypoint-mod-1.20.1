@@ -15,7 +15,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonSerializer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -32,7 +31,7 @@ public class CreateWaypointCommand {
                                 DimensionArgumentType.getDimensionArgument(context, "dimension").getDimension())))))));
     }
 
-    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, DimensionType dimension) {
+    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, DimensionType dimension){// DimensionType dimension) {
         final String author = context.getSource().getName();
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toString() + " in dimension \"" + dimension.toString() + "\"..."));
 
