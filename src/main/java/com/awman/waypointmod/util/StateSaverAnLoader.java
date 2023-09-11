@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 
 import java.util.HashMap;
 
+// I know what i'm doing :clueless:
 public class StateSaverAnLoader extends PersistentState {
 
     public WaypointMap waypointMap;
