@@ -16,16 +16,18 @@ public class StateSaverAnLoader extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
+        nbt.put(WaypointMap.NBT_STORAGE_KEY, waypointMap.toNbt());
         return nbt;
     }
 
-    public static StateSaverAnLoader createFromNbt(NbtCompound tag) {
+    public static StateSaverAnLoader createFromNbt(NbtCompound nbt) {
         StateSaverAnLoader state = new StateSaverAnLoader();
+        state.waypointMap = WaypointMap.fromNbt(nbt);
         return state;
     }
 
     public static StateSaverAnLoader getServerState(MinecraftServer server) {
-        PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
+        PersistentStateManager persistentStateManager = server.getOverworld().getPersistentStateManager();
 
         StateSaverAnLoader state = persistentStateManager.getOrCreate(
                 StateSaverAnLoader::createFromNbt,

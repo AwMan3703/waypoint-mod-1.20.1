@@ -1,5 +1,6 @@
 package com.awman.waypointmod.util;
 
+import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
@@ -17,7 +18,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WaypointMap extends HashMap<String, WaypointData> {
-    public WaypointMap fromNbt(NbtCompound nbt) {
+
+    public static final String NBT_STORAGE_KEY = new Identifier(WaypointMod.MOD_ID, "waypointMap").toString();
+
+    public static WaypointMap fromNbt(NbtCompound nbt) {
         // A conversion from Hashmap to NbtCompound is needed:
 
         // Create an empty WaypointMap
@@ -39,14 +43,14 @@ public class WaypointMap extends HashMap<String, WaypointData> {
         return waypointMap;
     }
 
-    public NbtCompound toNbt(WaypointMap waypointMap) {
+    public NbtCompound toNbt() {
         // A conversion from Hashmap to NbtCompound is needed:
 
         // Create an empty compound
         final NbtCompound nbt = new NbtCompound();
 
         // For each entry in the hashmap:
-        for (Map.Entry<String, WaypointData> entry : waypointMap.entrySet()) {
+        for (Map.Entry<String, WaypointData> entry : this.entrySet()) {
 
             // Get the waypoint's name and WaypointData content
             String waypointName = entry.getKey();

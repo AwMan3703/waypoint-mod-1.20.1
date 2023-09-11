@@ -27,12 +27,12 @@ public class WaypointData {
     public BlockPos coordinates;
 
     // The dimension this waypoint applies to
-    public String dimension;
+    public Identifier dimension;
 
     public WaypointData(String author, BlockPos position, String dimension) {
         this.author = author;
         this.coordinates = position;
-        this.dimension = dimension;
+        this.dimension = new Identifier(dimension);
     }
 
     public static WaypointData fromNbt(NbtCompound nbt) {
@@ -61,7 +61,7 @@ public class WaypointData {
         nbt.putIntArray(WaypointData.POSITION_NBT_KEY,
                 new int[]{ this.coordinates.getX(), this.coordinates.getY(), this.coordinates.getZ() });
         nbt.putString(WaypointData.DIMENSION_NBT_KEY,
-                this.dimension);
+                this.dimension.toString());
 
         // Return the NbtCompound object
         return nbt;
