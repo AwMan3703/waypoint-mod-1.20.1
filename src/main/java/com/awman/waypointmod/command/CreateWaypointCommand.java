@@ -26,7 +26,7 @@ public class CreateWaypointCommand {
                 .then(CommandManager.literal("create")
                     .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
                             .then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
-                                    .then(CommandManager.argument("dimension", IdentifierArgumentType.identifier())
+                                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                         .executes(context -> run(context,
                                 StringArgumentType.getString(context, "waypoint_id"),
                                 BlockPosArgumentType.getBlockPos(context, "position"),
