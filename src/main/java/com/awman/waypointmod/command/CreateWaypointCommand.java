@@ -2,6 +2,7 @@ package com.awman.waypointmod.command;
 
 import com.awman.waypointmod.util.StateSaverAnLoader;
 import com.awman.waypointmod.util.WaypointData;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -27,10 +28,10 @@ public class CreateWaypointCommand {
                     .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
                             .then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
                                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                        .executes(context -> run(context,
-                                StringArgumentType.getString(context, "waypoint_id"),
-                                BlockPosArgumentType.getBlockPos(context, "position"),
-                                DimensionArgumentType.getDimensionArgument(context, "dimension").getRegistryKey().getValue().toString())))))));
+                                        .executes(context -> run(context,
+                                                StringArgumentType.getString(context, "waypoint_id"),
+                                                BlockPosArgumentType.getBlockPos(context, "position"),
+                                                DimensionArgumentType.getDimensionArgument(context, "dimension").getRegistryKey().getValue().toString())))))));
     }
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, String dimensionIdentifier){
