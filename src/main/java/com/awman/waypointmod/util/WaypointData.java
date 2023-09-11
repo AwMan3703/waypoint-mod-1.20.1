@@ -41,7 +41,7 @@ public class WaypointData {
 
         // Extract the dimension String, then convert it to a RegistryKey<World>
         String[] stringDim = nbt.getString(WaypointData.DIMENSION_NBT_KEY).split(":");
-        RegistryKey<World> dimension = RegistryKey.of(RegistryKey.of(Registries.DIMENSION_TYPE, new Identifier(stringDim[0], stringDim[1])));
+        RegistryKey<World> dimension = RegistryKey.of(RegistryKey.ofRegistry(new Identifier("dimension")), new Identifier(stringDim[0], stringDim[1]));
 
         // Return a WaypointData object
         return new WaypointData(author, position, dimension);
