@@ -33,6 +33,7 @@ public class CreateWaypointCommand {
 
         StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getServer());
         serverState.waypointMap.insert(waypointId, new WaypointData(author, position, dimensionIdentifier));
+        serverState.markDirty();
 
         context.getSource().sendMessage(Text.of("Waypoint created!"));
 
