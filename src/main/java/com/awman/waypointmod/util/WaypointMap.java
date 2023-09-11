@@ -1,13 +1,17 @@
 package com.awman.waypointmod.util;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.storage.NbtScannable;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
+import net.fabricmc.fabric.impl.dimension.FabricDimensionInternals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,13 +37,13 @@ public class WaypointMap extends HashMap<String, WaypointData> {
             BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
 
             // Extract the dimension String, then convert it to a RegistryKey<World>
-            String stringDim = waypointDataCompound.getString(WaypointData.DIMENSION_NBT_KEY);
-            //DimensionType dimension = DimensionType.;
+            String[] stringDim = waypointDataCompound.getString(WaypointData.DIMENSION_NBT_KEY).split(":");
+            RegistryKey<World> dimension = RegistryKey.of(RegistryKey.of(Registries.DIMENSION_TYPE, new Identifier(stringDim[0], stringDim[1])));
 
             // Populate a WaypointData object with the retrieved data
-            //WaypointData waypointData = new WaypointData(author, position, dimension);
+            WaypointData waypointData = new WaypointData(author, position, dimension);
             // Add said object to the WaypointMap
-            //waypointMap.put(waypointName, waypointData);
+            waypointMap.put(waypointName, waypointData);
         }
 
         return waypointMap;
@@ -67,9 +71,9 @@ public class WaypointMap extends HashMap<String, WaypointData> {
                     waypointData.author);
             waypointDataCompound.putIntArray(WaypointData.POSITION_NBT_KEY,
                     new int[]{ waypointData.coordinates.getX(), waypointData.coordinates.getY(), waypointData.coordinates.getZ() });
-            /*waypointDataCompound.putString(WaypointData.DIMENSION_NBT_KEY,
-                    waypointData.dimension.);
-*/
+            waypointDataCompound.putString(WaypointData.DIMENSION_NBT_KEY,
+                    waypointData.dimension.getValue().toString());
+
             // Finally, add this entry to the main compound
             nbt.put(waypointName, waypointDataCompound);
         }

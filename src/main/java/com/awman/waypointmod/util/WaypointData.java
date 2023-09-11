@@ -21,11 +21,11 @@ public class WaypointData {
     public BlockPos coordinates;
 
     // The dimension this waypoint applies to
-    public DimensionType dimension;
+    public RegistryKey<World> dimension;
 
-    public WaypointData(String author, BlockPos position, DimensionType dimension) {
+    public WaypointData(String author, BlockPos position, RegistryKey<World> dimensionRegistryKey) {
         this.author = author;
         this.coordinates = position;
-        this.dimension = dimension;
+        this.dimension = dimensionRegistryKey;
     }
 }
