@@ -2,17 +2,7 @@ package com.awman.waypointmod.util;
 
 import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.storage.NbtScannable;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.dynamic.Codecs;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.fabricmc.fabric.impl.dimension.FabricDimensionInternals;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +10,10 @@ import java.util.Map;
 public class WaypointMap extends HashMap<String, WaypointData> {
 
     public static final String NBT_STORAGE_KEY = new Identifier(WaypointMod.MOD_ID, "waypointMap").toString();
+
+    public void insert(String key, WaypointData content) {
+        this.put(key, content);
+    }
 
     public static WaypointMap fromNbt(NbtCompound nbt) {
         // A conversion from Hashmap to NbtCompound is needed:
