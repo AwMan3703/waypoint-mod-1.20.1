@@ -30,15 +30,16 @@ public class CreateWaypointCommand {
                         .executes(context -> run(context,
                                 StringArgumentType.getString(context, "waypoint_id"),
                                 BlockPosArgumentType.getBlockPos(context, "position"),
-                                DimensionArgumentType.getDimensionArgument(context, "dimension").getRegistryKey())))))));
+                                DimensionArgumentType.getDimensionArgument(context, "dimension").getRegistryKey().getValue().toString())))))));
     }
 
-    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, RegistryKey<World> dimension){
+    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, String dimensionIdentifier){
         final String author = context.getSource().getName();
-        context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimension.getValue().toString() + "\"..."));
+        context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
         StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getServer());
-        serverState.waypointMap.put(waypointId, new WaypointData(author, position, dimension));
+        serverState.waypointMap.put(waypointId, new WaypointData(author, position, dimensionIdentifier));
+        context.getSource().getServer().getWorldRegistryKeys();
         return 1;
     }
 }

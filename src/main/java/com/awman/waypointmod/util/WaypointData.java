@@ -1,8 +1,12 @@
 package com.awman.waypointmod.util;
 
+import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.ServerDynamicRegistryType;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -23,12 +27,12 @@ public class WaypointData {
     public BlockPos coordinates;
 
     // The dimension this waypoint applies to
-    public RegistryKey<World> dimension;
+    public String dimension;
 
-    public WaypointData(String author, BlockPos position, RegistryKey<World> dimensionRegistryKey) {
+    public WaypointData(String author, BlockPos position, String dimension) {
         this.author = author;
         this.coordinates = position;
-        this.dimension = dimensionRegistryKey;
+        this.dimension = dimension;
     }
 
     public static WaypointData fromNbt(NbtCompound nbt) {
@@ -39,9 +43,9 @@ public class WaypointData {
         int[] arrayPos = nbt.getIntArray(WaypointData.POSITION_NBT_KEY);
         BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
 
-        // Extract the dimension String, then convert it to a RegistryKey<World>
-        String[] stringDim = nbt.getString(WaypointData.DIMENSION_NBT_KEY).split(":");
-        RegistryKey<World> dimension = RegistryKey.of(RegistryKey.ofRegistry(new Identifier("dimension")), new Identifier(stringDim[0], stringDim[1]));
+        // Extract the dimension String
+        String dimension = nbt.getString(WaypointData.DIMENSION_NBT_KEY); //.split(":");
+        //RegistryKey<World> dimension = RegistryKey.of(RegistryKey.ofRegistry( /**/, new Identifier(stringDim[0], stringDim[1]));
 
         // Return a WaypointData object
         return new WaypointData(author, position, dimension);
@@ -51,14 +55,13 @@ public class WaypointData {
         // Create an empty Nbt Compound
         NbtCompound nbt = new NbtCompound();
 
-        // Convert this object's properties to basic types,
-        // then put() them in the compound
+        // Convert this object's properties to basic types, then put() them in the compound
         nbt.putString(WaypointData.AUTHOR_NBT_KEY,
                 this.author);
         nbt.putIntArray(WaypointData.POSITION_NBT_KEY,
                 new int[]{ this.coordinates.getX(), this.coordinates.getY(), this.coordinates.getZ() });
         nbt.putString(WaypointData.DIMENSION_NBT_KEY,
-                this.dimension.getValue().toString());
+                this.dimension);
 
         // Return the NbtCompound object
         return nbt;
