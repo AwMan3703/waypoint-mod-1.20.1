@@ -2,7 +2,6 @@ package com.awman.waypointmod.util;
 
 import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,10 +24,10 @@ public class WaypointMap extends HashMap<String, WaypointData> {
         for (String waypointName : nbt.getKeys()) {
 
             // Get the entry's content compound
-            NbtCompound waypointDataCompound = nbt.getCompound(waypointName);
+            NbtCompound dataNbt = nbt.getCompound(waypointName);
 
             // Create a WaypointData object with the retrieved data
-            WaypointData waypointData = WaypointData.fromNbt(waypointDataCompound);
+            WaypointData waypointData = WaypointData.fromNbt(dataNbt);
 
             // Add said object to the WaypointMap
             waypointMap.put(waypointName, waypointData);

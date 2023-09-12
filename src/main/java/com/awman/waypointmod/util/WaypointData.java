@@ -1,5 +1,6 @@
 package com.awman.waypointmod.util;
 
+import com.awman.waypointmod.WaypointMod;
 import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
@@ -38,9 +39,11 @@ public class WaypointData {
     public static WaypointData fromNbt(NbtCompound nbt) {
         // Extract the author String
         String author = nbt.getString(WaypointData.AUTHOR_NBT_KEY);
+        WaypointMod.LOGGER.debug(author);
 
         // Extract the position array, then convert it to a BlockPos
         int[] arrayPos = nbt.getIntArray(WaypointData.POSITION_NBT_KEY);
+        WaypointMod.LOGGER.debug("array: ", arrayPos);
         BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
 
         // Extract the dimension String

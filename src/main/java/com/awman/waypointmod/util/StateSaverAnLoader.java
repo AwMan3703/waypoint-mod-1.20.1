@@ -2,18 +2,15 @@ package com.awman.waypointmod.util;
 
 import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-
-// I know what i'm doing :clueless:
+// I know what I'm doing :clueless:
 public class StateSaverAnLoader extends PersistentState {
 
-    public WaypointMap waypointMap = new WaypointMap();
+    public WaypointMap waypointMap;
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
@@ -28,7 +25,7 @@ public class StateSaverAnLoader extends PersistentState {
     }
 
     public static StateSaverAnLoader getServerState(MinecraftServer server) {
-        PersistentStateManager persistentStateManager = server.getOverworld().getPersistentStateManager();
+        PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
 
         StateSaverAnLoader state = persistentStateManager.getOrCreate(
                 StateSaverAnLoader::createFromNbt,
