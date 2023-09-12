@@ -20,8 +20,7 @@ public class ListWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("list")
                         //.then(CommandManager.argument("username", UuidArgumentType.uuid())
-                                .then(CommandManager.argument("detailed", BoolArgumentType.bool()))
-                                        .executes(context -> run(context))));
+                                .executes(context -> run(context))));
     }
 
     public static int run(CommandContext<ServerCommandSource> context /*, UUID userId*/) throws CommandSyntaxException {
