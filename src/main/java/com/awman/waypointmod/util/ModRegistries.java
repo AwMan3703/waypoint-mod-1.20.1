@@ -1,7 +1,8 @@
 package com.awman.waypointmod.util;
 
-import com.awman.waypointmod.command.CreateWaypointCommand;
-import com.awman.waypointmod.command.ListWaypointCommand;
+import com.awman.waypointmod.command.waypoint.CreateWaypointCommand;
+import com.awman.waypointmod.command.waypoint.InfoWaypointCommand;
+import com.awman.waypointmod.command.waypoint.ListWaypointCommand;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 public class ModRegistries {
@@ -12,5 +13,6 @@ public class ModRegistries {
     private static void registerCommands() {
         CommandRegistrationCallback.EVENT.register(CreateWaypointCommand::register);
         CommandRegistrationCallback.EVENT.register(ListWaypointCommand::register);
+        CommandRegistrationCallback.EVENT.register(InfoWaypointCommand::register);
     }
 }

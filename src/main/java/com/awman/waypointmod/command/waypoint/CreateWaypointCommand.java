@@ -1,10 +1,11 @@
-package com.awman.waypointmod.command;
+package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.util.StateSaverAnLoader;
 import com.awman.waypointmod.util.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.DimensionArgumentType;
@@ -18,16 +19,16 @@ public class CreateWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("create")
-                    .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
-                            .then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
-                                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                                        .executes(context -> run(context,
-                                                StringArgumentType.getString(context, "waypoint_id"),
-                                                BlockPosArgumentType.getBlockPos(context, "position"),
-                                                DimensionArgumentType.getDimensionArgument(context, "dimension").getRegistryKey().getValue().toString())))))));
+                        .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
+                                .then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
+                                        .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+                                                .executes(context -> run(context,
+                                                    StringArgumentType.getString(context, "waypoint_id"),
+                                                    BlockPosArgumentType.getBlockPos(context, "position"),
+                                                    DimensionArgumentType.getDimensionArgument(context, "dimension").getRegistryKey().getValue().toString())))))));
     }
 
-    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, String dimensionIdentifier){
+    public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, String dimensionIdentifier) throws CommandSyntaxException {
         final String author = context.getSource().getName();
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 

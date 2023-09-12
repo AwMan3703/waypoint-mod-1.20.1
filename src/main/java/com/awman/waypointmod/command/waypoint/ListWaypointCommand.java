@@ -1,33 +1,33 @@
-package com.awman.waypointmod.command;
+package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.util.StateSaverAnLoader;
 import com.awman.waypointmod.util.WaypointData;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.UserType;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.argument.UuidArgumentType;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.util.UserCache;
 
 import java.util.Map;
 import java.util.UUID;
 
 public class ListWaypointCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("list")
                         //.then(CommandManager.argument("username", UuidArgumentType.uuid())
-                                .executes(context -> run(context))));//);
+                                .then(CommandManager.argument("detailed", BoolArgumentType.bool()))
+                                        .executes(context -> run(context))));
     }
 
-    public static int run(CommandContext<ServerCommandSource> context) {//, UUID userId) {
+    public static int run(CommandContext<ServerCommandSource> context /*, UUID userId*/) throws CommandSyntaxException {
 
-        final boolean listUserCommands = true; // Wether we wanna list commands created by a specific user, or all of them
-        final String userName = "unknow_user";
+        final boolean listUserCommands = true; // Wether we want to list commands created by a specific user, or all of them
+        final String userName = "unknown_user";
 
         context.getSource().sendMessage(Text.of("Listing " +
                 (listUserCommands ? (userName + "'s") : "all") + " waypoints:"));
@@ -42,10 +42,7 @@ public class ListWaypointCommand {
                 WaypointData waypointData = entry.getValue();
 
                 context.getSource().sendMessage(Text.of(
-                        "-> \"" + waypointName + "\", created by " +
-                        "@" + waypointData.author + ": [" +
-                        waypointData.coordinates.toShortString() + " in " +
-                        waypointData.dimension.getPath() + "]"));
+                        "-> \"" + waypointName + "\", created by @" + waypointData.author));
             }
         }
 

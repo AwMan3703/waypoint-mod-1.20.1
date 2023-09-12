@@ -44,7 +44,7 @@ public class WaypointData {
         BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
 
         // Extract the dimension String
-        String dimension = nbt.getString(WaypointData.DIMENSION_NBT_KEY); //.split(":");
+        String dimension = nbt.getString(WaypointData.DIMENSION_NBT_KEY);
         //RegistryKey<World> dimension = RegistryKey.of(RegistryKey.ofRegistry( /**/, new Identifier(stringDim[0], stringDim[1]));
 
         // Return a WaypointData object
