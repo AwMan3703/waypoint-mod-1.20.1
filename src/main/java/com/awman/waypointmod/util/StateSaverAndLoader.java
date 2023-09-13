@@ -8,9 +8,9 @@ import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
 // I know what I'm doing :clueless:
-public class StateSaverAnLoader extends PersistentState {
+public class StateSaverAndLoader extends PersistentState {
 
-    public WaypointMap waypointMap;
+    public WaypointMap waypointMap;// = new WaypointMap();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
@@ -18,18 +18,18 @@ public class StateSaverAnLoader extends PersistentState {
         return nbt;
     }
 
-    public static StateSaverAnLoader createFromNbt(NbtCompound nbt) {
-        StateSaverAnLoader state = new StateSaverAnLoader();
-        state.waypointMap = WaypointMap.fromNbt(nbt);
+    public static StateSaverAndLoader createFromNbt(NbtCompound nbt) {
+        StateSaverAndLoader state = new StateSaverAndLoader();
+        state.waypointMap = WaypointMap.fromNbt(nbt.getCompound(WaypointMap.NBT_STORAGE_KEY));
         return state;
     }
 
-    public static StateSaverAnLoader getServerState(MinecraftServer server) {
+    public static StateSaverAndLoader getServerState(MinecraftServer server) {
         PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
 
-        StateSaverAnLoader state = persistentStateManager.getOrCreate(
-                StateSaverAnLoader::createFromNbt,
-                StateSaverAnLoader::new,
+        StateSaverAndLoader state = persistentStateManager.getOrCreate(
+                StateSaverAndLoader::createFromNbt,
+                StateSaverAndLoader::new,
                 WaypointMod.MOD_ID
         );
 

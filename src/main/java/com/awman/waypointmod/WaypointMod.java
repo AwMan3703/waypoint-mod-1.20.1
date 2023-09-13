@@ -1,7 +1,6 @@
 package com.awman.waypointmod;
 
 import com.awman.waypointmod.util.ModRegistries;
-import com.awman.waypointmod.util.StateSaverAnLoader;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;

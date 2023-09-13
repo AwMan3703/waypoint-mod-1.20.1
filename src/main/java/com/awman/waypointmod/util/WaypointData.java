@@ -19,9 +19,6 @@ public class WaypointData {
     // constants for nbt storage keys
     public static final String AUTHOR_NBT_KEY = "author";
     public static final String POSITION_NBT_KEY = "position";
-    public static final String X_NBT_KEY = "position";
-    public static final String Y_NBT_KEY = "position";
-    public static final String Z_NBT_KEY = "position";
     public static final String DIMENSION_NBT_KEY = "dimension";
 
     // The player who created the waypoint
@@ -45,13 +42,8 @@ public class WaypointData {
         WaypointMod.LOGGER.debug(author);
 
         // Extract the position array, then convert it to a BlockPos
-        //int[] arrayPos = nbt.getIntArray(WaypointData.POSITION_NBT_KEY);
-        //BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
-        BlockPos position = new BlockPos(
-                nbt.getInt(X_NBT_KEY),
-                nbt.getInt(Y_NBT_KEY),
-                nbt.getInt(Z_NBT_KEY)
-        );
+        int[] arrayPos = nbt.getIntArray(WaypointData.POSITION_NBT_KEY);
+        BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
 
         // Extract the dimension String
         String dimension = nbt.getString(WaypointData.DIMENSION_NBT_KEY);
@@ -68,11 +60,8 @@ public class WaypointData {
         // Convert this object's properties to basic types, then put() them in the compound
         nbt.putString(WaypointData.AUTHOR_NBT_KEY,
                 this.author);
-        /*nbt.putIntArray(WaypointData.POSITION_NBT_KEY,
+        nbt.putIntArray(WaypointData.POSITION_NBT_KEY,
                 new int[]{ this.coordinates.getX(), this.coordinates.getY(), this.coordinates.getZ() });
-*/        nbt.putInt(X_NBT_KEY, this.coordinates.getX());
-        nbt.putInt(Y_NBT_KEY, this.coordinates.getY());
-        nbt.putInt(Z_NBT_KEY, this.coordinates.getZ());
         nbt.putString(WaypointData.DIMENSION_NBT_KEY,
                 this.dimension.toString());
 
