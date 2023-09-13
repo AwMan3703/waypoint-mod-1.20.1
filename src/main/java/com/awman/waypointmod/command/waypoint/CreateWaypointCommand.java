@@ -1,7 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.StateSaverAnLoader;
-import com.awman.waypointmod.util.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
+import com.awman.waypointmod.util.storage.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -32,7 +32,7 @@ public class CreateWaypointCommand {
         final String author = context.getSource().getName();
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
-        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getWorld().getServer());
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
         serverState.waypointMap.insert(waypointId, new WaypointData(author, position, dimensionIdentifier));
         serverState.markDirty();
 
