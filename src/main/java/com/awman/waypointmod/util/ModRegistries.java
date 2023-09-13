@@ -5,7 +5,12 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 public class ModRegistries {
     public static void registerEverything() {
+        registerStateSaverAndLoader();
         registerCommands();
+    }
+
+    private static void registerStateSaverAndLoader() {
+
     }
 
     private static void registerCommands() {
