@@ -1,8 +1,8 @@
 package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.argument.UsernameArgumentType;
-import com.awman.waypointmod.util.StateSaverAndLoader;
-import com.awman.waypointmod.util.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
+import com.awman.waypointmod.util.storage.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -27,6 +27,7 @@ public class ListWaypointCommand {
 
         final boolean listUserCommands = true; // Wether we want to list commands created by a specific user, or all of them
 
+        // Send the waypoint list's header, using a ternary operator to set a coherent title
         context.getSource().sendMessage(Text.of("Listing " +
                 (listUserCommands ? (username + "'s") : "all") + " waypoints:"));
 

@@ -1,18 +1,9 @@
-package com.awman.waypointmod.util;
+package com.awman.waypointmod.util.storage;
 
 import com.awman.waypointmod.WaypointMod;
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.ServerDynamicRegistryType;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
 
 public class WaypointData {
 

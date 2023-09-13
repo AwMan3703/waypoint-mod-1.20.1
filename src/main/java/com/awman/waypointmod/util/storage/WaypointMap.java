@@ -1,6 +1,5 @@
-package com.awman.waypointmod.util;
+package com.awman.waypointmod.util.storage;
 
-import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.HashMap;
