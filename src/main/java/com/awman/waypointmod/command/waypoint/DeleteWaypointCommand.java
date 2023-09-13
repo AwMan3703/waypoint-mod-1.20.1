@@ -23,7 +23,7 @@ public class DeleteWaypointCommand {
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
 
-        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getServer());
+        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getWorld().getServer());
 
         if (!serverState.waypointMap.containsKey(waypointId)) {
 

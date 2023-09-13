@@ -31,7 +31,7 @@ public class ListWaypointCommand {
         context.getSource().sendMessage(Text.of("Listing " +
                 (listUserCommands ? (userName + "'s") : "all") + " waypoints:"));
 
-        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getServer());
+        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getWorld().getServer());
 
         if (serverState.waypointMap.isEmpty()) {
             context.getSource().sendMessage(Text.of("[No waypoints available]"));

@@ -32,7 +32,7 @@ public class CreateWaypointCommand {
         final String author = context.getSource().getName();
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
-        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getServer());
+        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getWorld().getServer());
         serverState.waypointMap.insert(waypointId, new WaypointData(author, position, dimensionIdentifier));
         serverState.markDirty();
 
