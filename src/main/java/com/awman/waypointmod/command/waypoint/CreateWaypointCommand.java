@@ -1,6 +1,6 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.StateSaverAnLoader;
+import com.awman.waypointmod.util.StateSaverAndLoader;
 import com.awman.waypointmod.util.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -13,7 +13,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.Nullable;
 
 public class CreateWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
@@ -32,7 +31,7 @@ public class CreateWaypointCommand {
         final String author = context.getSource().getName();
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
-        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getWorld().getServer());
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
         serverState.waypointMap.insert(waypointId, new WaypointData(author, position, dimensionIdentifier));
         serverState.markDirty();
 

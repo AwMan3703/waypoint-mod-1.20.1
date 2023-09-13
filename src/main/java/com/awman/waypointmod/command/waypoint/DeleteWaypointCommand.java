@@ -1,7 +1,6 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.StateSaverAnLoader;
-import com.awman.waypointmod.util.WaypointData;
+import com.awman.waypointmod.util.StateSaverAndLoader;
 import com.awman.waypointmod.util.WaypointMap;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -23,7 +22,7 @@ public class DeleteWaypointCommand {
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
 
-        StateSaverAnLoader serverState = StateSaverAnLoader.getServerState(context.getSource().getWorld().getServer());
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
 
         if (!serverState.waypointMap.containsKey(waypointId)) {
 
