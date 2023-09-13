@@ -1,9 +1,9 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.argument.waypointAuthorArgumentType;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.storage.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
@@ -20,9 +20,8 @@ public class ListWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("list")
-                        .then(CommandManager.argument("username", waypointAuthorArgumentType.username())
-                                .executes(context -> run(context,
-                                        waypointAuthorArgumentType.getUsername(context, "username"))))));
+                        .then(CommandManager.argument("username", StringArgumentType.string())
+                                .executes(context -> run(context, StringArgumentType.getString(context, "username"))))));
     }
 
     public static int run(CommandContext<ServerCommandSource> context, String username) throws CommandSyntaxException {
