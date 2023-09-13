@@ -14,12 +14,15 @@ public class WaypointData {
 
     // The player who created the waypoint
     public String author;
+    public boolean isAuthor(String f) { return this.author==f; }
 
     // The coordinates of this waypoint
     public BlockPos coordinates;
+    public boolean isCoords(BlockPos f) { return this.coordinates.equals(f); }
 
     // The dimension this waypoint applies to
     public Identifier dimension;
+    public boolean isDimension(Identifier f) { return this.dimension.equals(f); }
 
     public WaypointData(String author, BlockPos position, String dimension) {
         this.author = author;

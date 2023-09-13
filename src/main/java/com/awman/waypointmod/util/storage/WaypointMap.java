@@ -1,6 +1,7 @@
 package com.awman.waypointmod.util.storage;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,8 @@ public class WaypointMap extends HashMap<String, WaypointData> {
     public void insert(String key, WaypointData content) {
         this.put(key, content);
     }
+    public Map.Entry<String, WaypointData> find(String f) {return null;}
+    public Map.Entry<String, WaypointData> find(Identifier f) {return null;}
 
     public static WaypointMap fromNbt(NbtCompound nbt) {
         // A conversion from Hashmap to NbtCompound is needed:
