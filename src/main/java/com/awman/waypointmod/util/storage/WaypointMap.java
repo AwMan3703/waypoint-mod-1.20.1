@@ -3,18 +3,31 @@ package com.awman.waypointmod.util.storage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 public class WaypointMap extends HashMap<String, WaypointData> {
 
     public static final String NBT_STORAGE_KEY = "waypointMap";
 
+    // Add a new entry
     public void insert(String key, WaypointData content) {
         this.put(key, content);
     }
-    public Map.Entry<String, WaypointData> find(String f) {return null;}
-    public Map.Entry<String, WaypointData> find(Identifier f) {return null;}
+
+    // Find the keys of entries based on a filter function
+    public List<Entry<String, WaypointData>> find(Function<Entry<String, WaypointData>, Boolean> f) {
+        List<Map.Entry<String, WaypointData>> results = Arrays.asList();
+
+        for (Map.Entry<String, WaypointData> entry : this.entrySet()) {
+            if (f.apply(entry)) results.add(entry);
+        }
+
+        return results;
+    }
 
     public static WaypointMap fromNbt(NbtCompound nbt) {
         // A conversion from Hashmap to NbtCompound is needed:
