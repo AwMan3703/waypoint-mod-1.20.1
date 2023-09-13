@@ -28,7 +28,7 @@ public class UsernameArgumentType implements ArgumentType<String> {
         String argument = reader.getString().substring(argBeginning, reader.getCursor());
         try {
             // The actual logic
-            return "";
+            return "1234";
 
         } catch (Exception ex) {
             // Throw in case of exception in the logic
