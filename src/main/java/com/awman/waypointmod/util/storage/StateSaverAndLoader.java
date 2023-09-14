@@ -33,17 +33,20 @@ public class StateSaverAndLoader extends PersistentState {
     }
 
     public static StateSaverAndLoader getServerState(MinecraftServer server) {
+        // Get the server's persistentStateManager
         PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
 
+        // Initialize it
         StateSaverAndLoader state = persistentStateManager.getOrCreate(
                 StateSaverAndLoader::createFromNbt,
                 StateSaverAndLoader::new,
                 WaypointMod.MOD_ID
         );
 
-        // So that the data will be saved when closing
+        // So that the data will be saved when closing or pausing
         state.markDirty();
 
+        // Return it
         return state;
     }
 }
