@@ -44,8 +44,10 @@ public class ListWaypointCommand {
                 String waypointName = entry.getKey();
                 WaypointData waypointData = entry.getValue();
 
-                context.getSource().sendMessage(Text.of(
-                        "-> \"" + waypointName + "\", " + (listUserCommands ? "" : ("created by @" + waypointData.author))));
+                if ((listUserCommands && (waypointData.author == username)) || !listUserCommands) {
+                    context.getSource().sendMessage(Text.of(
+                            "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));
+                }
             }
         }
 
