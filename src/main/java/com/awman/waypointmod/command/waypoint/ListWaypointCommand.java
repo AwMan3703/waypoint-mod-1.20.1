@@ -7,6 +7,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.server.command.CommandManager;
@@ -23,8 +24,8 @@ public class ListWaypointCommand {
                 .then(CommandManager.literal("list")
                         .executes(context -> run(context, null))
                         .then(CommandManager.argument("username", StringArgumentType.string())
+                                .suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
                                 .executes(context -> run(context, StringArgumentType.getString(context, "username"))))));
-                                //.suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
     }
 
     public static int run(CommandContext<ServerCommandSource> context, @Nullable String username) throws CommandSyntaxException {
