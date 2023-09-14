@@ -34,12 +34,17 @@ public class waypointAuthorSuggestionProvider implements SuggestionProvider<Serv
 
         // Create the authors hashmap, to store usernames and the # of waypoints they have created
         HashMap<String, Integer> authors = new HashMap<String, Integer>();
+        // For each saved waypoint:
         for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
+            // Get the username
             String author = entry.getKey();
 
+            // Put username in the hashmap, then:
+            // If the hashmap already has an entry for this user, increment it
+            // Otherwise, initialize it (just set it to 1)
             authors.put(
                     author, // The author's username
-                    authors.get(author)!=null ? (authors.get(author) + 1) : 1 // Funny ternary to increment or initialize
+                    authors.get(author) != null ? (authors.get(author) + 1) : 1 // Funny ternary to increment or initialize
             );
         }
 
@@ -50,6 +55,7 @@ public class waypointAuthorSuggestionProvider implements SuggestionProvider<Serv
                 Text.of(entry.getValue().toString() + " waypoints"));
         }
 
+        // Return (to) the future
         return builder.buildFuture();
     }
 }
