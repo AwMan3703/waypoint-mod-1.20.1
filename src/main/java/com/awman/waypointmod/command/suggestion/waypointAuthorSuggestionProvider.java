@@ -32,6 +32,7 @@ public class waypointAuthorSuggestionProvider implements SuggestionProvider<Serv
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
 
+        // Create the authors hashmap, to store usernames and the # of waypoints they have created
         HashMap<String, Integer> authors = new HashMap<String, Integer>();
         for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
             String author = entry.getKey();
@@ -42,7 +43,12 @@ public class waypointAuthorSuggestionProvider implements SuggestionProvider<Serv
             );
         }
 
-        builder.suggest("username", Text.of("# of waypoints"));
+        // Take all the authors and the # of their waypoints, and suggest them
+        for (Map.Entry<String, Integer> entry : authors.entrySet()) {
+            builder.suggest(
+                entry.getKey(),
+                Text.of(entry.getValue().toString() + " waypoints"));
+        }
 
         return builder.buildFuture();
     }
