@@ -19,9 +19,10 @@ public class StateSaverAndLoader extends PersistentState {
     }
 
     public static StateSaverAndLoader createFromNbt(NbtCompound nbt) {
-        StateSaverAndLoader state = new StateSaverAndLoader();
-        state.waypointMap = WaypointMap.fromNbt(nbt.getCompound(WaypointMap.NBT_STORAGE_KEY));
-        return state;
+        // This is Dave. Dave makes the data storage system work. Without Dave, the whole thing crashes.
+        StateSaverAndLoader dave = new StateSaverAndLoader();
+        dave.waypointMap = WaypointMap.fromNbt(nbt.getCompound(WaypointMap.NBT_STORAGE_KEY));
+        return dave;
     }
 
     public static StateSaverAndLoader getServerState(MinecraftServer server) {

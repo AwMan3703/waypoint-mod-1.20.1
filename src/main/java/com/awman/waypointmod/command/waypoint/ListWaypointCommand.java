@@ -21,10 +21,10 @@ public class ListWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, RegistrationEnvironment registrationEnvironment) {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("list")
+                        .executes(context -> run(context, null))
                         .then(CommandManager.argument("username", StringArgumentType.string())
+                                .executes(context -> run(context, StringArgumentType.getString(context, "username"))))));
                                 //.suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
-                                .executes(context -> run(context, StringArgumentType.getString(context, "username"))))
-                        .executes(context -> run(context, null))));
     }
 
     public static int run(CommandContext<ServerCommandSource> context, @Nullable String username) throws CommandSyntaxException {
@@ -44,7 +44,7 @@ public class ListWaypointCommand {
                 String waypointName = entry.getKey();
                 WaypointData waypointData = entry.getValue();
 
-                if ((listUserCommands && (waypointData.author == username)) || !listUserCommands) {
+                if ((listUserCommands && (waypointData.author.toString().equals(username.toString()))) || !listUserCommands) {
                     context.getSource().sendMessage(Text.of(
                             "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));
                 }
