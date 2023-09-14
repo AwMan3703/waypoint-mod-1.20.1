@@ -14,14 +14,21 @@ public class StateSaverAndLoader extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
+        // Convert the StateSaverAndLoader to an NBT compound, for saving
         nbt.put(WaypointMap.NBT_STORAGE_KEY, waypointMap.toNbt());
+
+        // Return it
         return nbt;
     }
 
     public static StateSaverAndLoader createFromNbt(NbtCompound nbt) {
-        // This is Dave. Dave makes the data storage system work. Without Dave, the whole thing crashes.
+        // This is Dave. Dave makes the data storage system work. Without Dave, the whole mod crashes.
         StateSaverAndLoader dave = new StateSaverAndLoader();
+
+        // Initialize the StateSaverAndLoader
         dave.waypointMap = WaypointMap.fromNbt(nbt.getCompound(WaypointMap.NBT_STORAGE_KEY));
+
+        // Return it
         return dave;
     }
 
