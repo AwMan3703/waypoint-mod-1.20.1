@@ -22,7 +22,7 @@ public class ListWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("list")
                         .then(CommandManager.argument("username", StringArgumentType.string())
-                                .suggests(new WaypointAuthorSuggestionProvider())
+                                .suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
                                 .executes(context -> run(context, StringArgumentType.getString(context, "username"))))
                         .executes(context -> run(context, null))));
     }
