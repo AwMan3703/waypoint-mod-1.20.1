@@ -22,7 +22,7 @@ public class ListWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("list")
                         .then(CommandManager.argument("username", StringArgumentType.string())
-                                .suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
+                                //.suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
                                 .executes(context -> run(context, StringArgumentType.getString(context, "username"))))
                         .executes(context -> run(context, null))));
     }
@@ -45,7 +45,7 @@ public class ListWaypointCommand {
                 WaypointData waypointData = entry.getValue();
 
                 context.getSource().sendMessage(Text.of(
-                        "-> \"" + waypointName + "\", created by @" + waypointData.author));
+                        "-> \"" + waypointName + "\", " + (listUserCommands ? "" : ("created by @" + waypointData.author))));
             }
         }
 
