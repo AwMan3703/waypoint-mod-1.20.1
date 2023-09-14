@@ -1,5 +1,6 @@
 package com.awman.waypointmod.command.waypoint;
 
+import com.awman.waypointmod.command.suggestion.WaypointAuthorSuggestionProvider;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.storage.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
@@ -7,10 +8,12 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
@@ -19,12 +22,14 @@ public class ListWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("list")
                         .then(CommandManager.argument("username", StringArgumentType.string())
-                                .executes(context -> run(context, StringArgumentType.getString(context, "username"))))));
+                                .suggests(new WaypointAuthorSuggestionProvider())
+                                .executes(context -> run(context, StringArgumentType.getString(context, "username"))))
+                        .executes(context -> run(context, null))));
     }
 
-    public static int run(CommandContext<ServerCommandSource> context, String username) throws CommandSyntaxException {
+    public static int run(CommandContext<ServerCommandSource> context, @Nullable String username) throws CommandSyntaxException {
 
-        final boolean listUserCommands = true; // Wether we want to list commands created by a specific user, or all of them
+        final boolean listUserCommands = username != null; // Wether we want to list commands created by a specific user, or all of them
 
         // Send the waypoint list's header, using a ternary operator to set a coherent title
         context.getSource().sendMessage(Text.of("Listing " +
