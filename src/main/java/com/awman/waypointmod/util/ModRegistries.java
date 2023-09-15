@@ -14,7 +14,7 @@ public class ModRegistries {
     }
 
     private static void registerSuggestionProviders() {
-        SuggestionProviders.register(WaypointAuthorSuggestionProvider.ID, new WaypointAuthorSuggestionProvider());
+        //SuggestionProviders.register(WaypointAuthorSuggestionProvider.ID, new WaypointAuthorSuggestionProvider());
     }
 
     private static void registerCommands() {

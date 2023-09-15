@@ -16,12 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class WaypointAuthorSuggestionProvider implements SuggestionProvider<CommandSource> {
+public class WaypointAuthorSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 
     public static final Identifier ID = new Identifier(WaypointMod.MOD_ID, "WaypointAuthorSuggestionProvider");
 
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSource> context, SuggestionsBuilder builder) {
+    public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
         ServerCommandSource source;
         if (!(context.getSource() instanceof ServerCommandSource)) { throw new RuntimeException("context's source is not ServerCommandSource"); }
         else { source = (ServerCommandSource) context.getSource(); }
