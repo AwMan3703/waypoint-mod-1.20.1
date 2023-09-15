@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class WaypointAuthorSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 
-    public static final Identifier ID = new Identifier(WaypointMod.MOD_ID, "WaypointAuthorSuggestionProvider");
+    public static final Identifier ID = new Identifier(WaypointMod.MOD_ID, "waypoint-author-suggestion-provider");
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
@@ -33,7 +33,7 @@ public class WaypointAuthorSuggestionProvider implements SuggestionProvider<Serv
         // For each saved waypoint:
         for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
             // Get the username
-            String author = entry.getKey();
+            String author = entry.getValue().author;
 
             // Put username in the hashmap, then:
             // If the hashmap already has an entry for this user, increment it
