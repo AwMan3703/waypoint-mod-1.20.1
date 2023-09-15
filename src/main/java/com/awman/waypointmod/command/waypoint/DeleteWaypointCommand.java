@@ -23,19 +23,23 @@ public class DeleteWaypointCommand {
     public static int run(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
+        WaypointMap waypointMap = serverState.waypointMap;
 
-        if (!serverState.waypointMap.containsKey(waypointId)) {
-
+        if (!waypointMap.containsKey(waypointId)) {
+            // If the waypoint doesn't exist:
             context.getSource().sendMessage(Text.of("Waypoint not found!"));
-
+            return -1;
+        } else if (
+                (context.getSource().getName() != waypointMap.get(waypointId).author) // The player is the author
+                || (context.getSource().hasPermissionLevel(1)) // or The player is an op
+        ) {
+            // If the player doesn't have the necessary permissions:
+            context.getSource().sendMessage(Text.of("Insufficient permissions!"));
             return -1;
         } else {
-
-            WaypointMap waypointMap = serverState.waypointMap;
+            // If no problem is detected:
             waypointMap.remove(waypointId);
-
             context.getSource().sendMessage(Text.of("Waypoint deleted!"));
-
             return 1;
         }
     }
