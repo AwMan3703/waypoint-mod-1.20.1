@@ -24,7 +24,7 @@ public class ListWaypointCommand {
                 .then(CommandManager.literal("list")
                         .executes(context -> run(context, null))
                         .then(CommandManager.argument("username", StringArgumentType.string())
-                                .suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
+                                .suggests(SuggestionProviders.byId(WaypointAuthorSuggestionProvider.ID))
                                 .executes(context -> run(context, StringArgumentType.getString(context, "username"))))));
     }
 

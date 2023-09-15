@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -15,13 +16,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class WaypointAuthorSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+public class WaypointAuthorSuggestionProvider implements SuggestionProvider<CommandSource> {
 
     public static final Identifier ID = new Identifier(WaypointMod.MOD_ID, "WaypointAuthorSuggestionProvider");
 
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
+    public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSource> context, SuggestionsBuilder builder) {
+        ServerCommandSource source;
+        if (!(context.getSource() instanceof ServerCommandSource)) { throw new RuntimeException("context's source is not ServerCommandSource"); }
+        else { source = (ServerCommandSource) context.getSource(); }
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
         // Create the authors hashmap, to store usernames and the # of waypoints they have created
         HashMap<String, Integer> authors = new HashMap<>();
