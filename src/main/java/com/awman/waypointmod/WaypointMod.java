@@ -1,6 +1,7 @@
 package com.awman.waypointmod;
 
 import com.awman.waypointmod.util.ModRegistries;
+import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 
 import org.slf4j.Logger;
