@@ -1,13 +1,19 @@
 package com.awman.waypointmod.util.data;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.lwjgl.system.Platform;
+
+import java.util.UUID;
 
 public class WaypointData {
 
     // constants for nbt storage keys
     public static final String AUTHOR_NBT_KEY = "author";
+    public static final String AUTHOR_UUID_NBT_KEY = "author-uuid";
     public static final String POSITION_NBT_KEY = "position";
     public static final String DIMENSION_NBT_KEY = "dimension";
     public static final String VISIBILITY_NBT_KEY = "visibility";
@@ -15,6 +21,10 @@ public class WaypointData {
     // The player who created the waypoint
     public String author;
     public boolean isAuthor(String f) { return this.author.equals(f); }
+
+    // The author's UUID
+    public UUID authorUUID;
+    public boolean isAuthorUUID(UUID f) { return this.authorUUID.equals(f); }
 
     // The coordinates of this waypoint
     public BlockPos coordinates;
@@ -27,8 +37,9 @@ public class WaypointData {
     private final Boolean visibility; // True = public ; False = private
     public boolean isPublic() { return this.visibility.equals(true); }
 
-    public WaypointData(String author, BlockPos position, String dimension, Boolean isPublic) {
+    public WaypointData(String author, UUID authorUUID, BlockPos position, String dimension, Boolean isPublic) {
         this.author = author;
+        this.authorUUID = authorUUID;
         this.coordinates = position;
         this.dimension = new Identifier(dimension);
         this.visibility = isPublic;
@@ -38,6 +49,8 @@ public class WaypointData {
 
         // Extract the author String
         String author = nbt.getString(WaypointData.AUTHOR_NBT_KEY);
+        // Extract the author UUID
+        UUID authorUUID = nbt.getUuid(WaypointData.AUTHOR_UUID_NBT_KEY);
         // Extract the position array, then convert it to a BlockPos
         int[] arrayPos = nbt.getIntArray(WaypointData.POSITION_NBT_KEY);
         BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
@@ -47,7 +60,7 @@ public class WaypointData {
         Boolean visibility = nbt.getBoolean(WaypointData.VISIBILITY_NBT_KEY);
 
         // Return a WaypointData object
-        return new WaypointData(author, position, dimension, visibility);
+        return new WaypointData(author, authorUUID, position, dimension, visibility);
     }
 
     public NbtCompound toNbt() {
@@ -57,6 +70,8 @@ public class WaypointData {
         // Convert this object's properties to basic types, then put() them in the compound
         nbt.putString(WaypointData.AUTHOR_NBT_KEY,
                 this.author);
+        nbt.putUuid(WaypointData.AUTHOR_UUID_NBT_KEY,
+                this.authorUUID);
         nbt.putIntArray(WaypointData.POSITION_NBT_KEY,
                 new int[]{ this.coordinates.getX(), this.coordinates.getY(), this.coordinates.getZ() });
         nbt.putString(WaypointData.DIMENSION_NBT_KEY,

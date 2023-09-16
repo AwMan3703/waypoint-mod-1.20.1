@@ -1,6 +1,6 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.data.StateSaverAndLoader;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -36,12 +36,17 @@ public class CreateWaypointCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, String dimensionIdentifier) throws CommandSyntaxException {
-        final String author = context.getSource().getName();
+
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
         serverState.waypointMap.insert(waypointId,
-                new WaypointData(author, position, dimensionIdentifier, true) // Always public, since the feature is not yet implemented
+                new WaypointData(
+                        context.getSource().getPlayer().getName().getString(),
+                        context.getSource().getPlayer().getUuid(),
+                        position,
+                        dimensionIdentifier,
+                        true) // Always public, since the feature is not yet implemented
         );
         serverState.markDirty();
 

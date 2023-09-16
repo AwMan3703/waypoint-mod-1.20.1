@@ -1,7 +1,7 @@
 package com.awman.waypointmod.command.suggestion;
 
 import com.awman.waypointmod.WaypointMod;
-import com.awman.waypointmod.util.data.StateSaverAndLoader;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
