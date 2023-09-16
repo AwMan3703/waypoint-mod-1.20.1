@@ -1,7 +1,8 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
-import com.awman.waypointmod.util.storage.WaypointMap;
+import com.awman.waypointmod.WaypointMod;
+import com.awman.waypointmod.util.data.StateSaverAndLoader;
+import com.awman.waypointmod.util.data.WaypointMap;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -31,7 +32,7 @@ public class DeleteWaypointCommand {
             return -1;
         } else if (
                 (context.getSource().getName() != waypointMap.get(waypointId).author) // The player is the author
-                || (context.getSource().hasPermissionLevel(1)) // or The player is an op
+                || (context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) // or The player is an op
         ) {
             // If the player doesn't have the necessary permissions:
             context.getSource().sendMessage(Text.of("Insufficient permissions!"));

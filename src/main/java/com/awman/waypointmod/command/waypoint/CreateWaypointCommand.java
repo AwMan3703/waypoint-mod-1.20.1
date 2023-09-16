@@ -1,7 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
-import com.awman.waypointmod.util.storage.WaypointData;
+import com.awman.waypointmod.util.data.StateSaverAndLoader;
+import com.awman.waypointmod.util.data.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -13,7 +13,6 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import org.jetbrains.annotations.Nullable;
 
 public class CreateWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
@@ -33,7 +32,9 @@ public class CreateWaypointCommand {
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
-        serverState.waypointMap.insert(waypointId, new WaypointData(author, position, dimensionIdentifier));
+        serverState.waypointMap.insert(waypointId,
+                new WaypointData(author, position, dimensionIdentifier, true) // Always public, since the feature is not yet implemented
+        );
         serverState.markDirty();
 
         context.getSource().sendMessage(Text.of("Waypoint created!"));

@@ -1,4 +1,4 @@
-package com.awman.waypointmod.util.storage;
+package com.awman.waypointmod.util.data;
 
 import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;

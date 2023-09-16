@@ -1,7 +1,6 @@
-package com.awman.waypointmod.util.storage;
+package com.awman.waypointmod.util.data;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.HashMap;

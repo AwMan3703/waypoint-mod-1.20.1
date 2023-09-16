@@ -1,9 +1,13 @@
-package com.awman.waypointmod.util.storage;
+package com.awman.waypointmod.util.data;
 
 import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.spongepowered.asm.util.Bytecode;
+
+import java.beans.Visibility;
 
 public class WaypointData {
 
@@ -11,10 +15,11 @@ public class WaypointData {
     public static final String AUTHOR_NBT_KEY = "author";
     public static final String POSITION_NBT_KEY = "position";
     public static final String DIMENSION_NBT_KEY = "dimension";
+    public static final String VISIBILITY_NBT_KEY = "visibility";
 
     // The player who created the waypoint
     public String author;
-    public boolean isAuthor(String f) { return this.author==f; }
+    public boolean isAuthor(String f) { return this.author.equals(f); }
 
     // The coordinates of this waypoint
     public BlockPos coordinates;
@@ -24,10 +29,14 @@ public class WaypointData {
     public Identifier dimension;
     public boolean isDimension(Identifier f) { return this.dimension.equals(f); }
 
-    public WaypointData(String author, BlockPos position, String dimension) {
+    private final Boolean visibility; // True = public ; False = private
+    public boolean isPublic() { return this.visibility.equals(true); }
+
+    public WaypointData(String author, BlockPos position, String dimension, Boolean isPublic) {
         this.author = author;
         this.coordinates = position;
         this.dimension = new Identifier(dimension);
+        this.visibility = isPublic;
     }
 
     public static WaypointData fromNbt(NbtCompound nbt) {
@@ -43,8 +52,11 @@ public class WaypointData {
         String dimension = nbt.getString(WaypointData.DIMENSION_NBT_KEY);
         //RegistryKey<World> dimension = RegistryKey.of(RegistryKey.ofRegistry( /**/, new Identifier(stringDim[0], stringDim[1]));
 
+        // Extract the visibility Boolean
+        Boolean visibility = nbt.getBoolean(WaypointData.VISIBILITY_NBT_KEY);
+
         // Return a WaypointData object
-        return new WaypointData(author, position, dimension);
+        return new WaypointData(author, position, dimension, visibility);
     }
 
     public NbtCompound toNbt() {
@@ -58,6 +70,8 @@ public class WaypointData {
                 new int[]{ this.coordinates.getX(), this.coordinates.getY(), this.coordinates.getZ() });
         nbt.putString(WaypointData.DIMENSION_NBT_KEY,
                 this.dimension.toString());
+        nbt.putBoolean(WaypointData.VISIBILITY_NBT_KEY,
+                this.visibility);
 
         // Return the NbtCompound object
         return nbt;
