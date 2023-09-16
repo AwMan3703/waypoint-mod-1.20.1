@@ -39,7 +39,7 @@ public class WaypointSuggestionProvider implements SuggestionProvider<ServerComm
             ) {
                 // Put waypoint's name and author in the hashmap
                 waypoints.put(
-                        name, author
+                        name, author + " // " + (entry.getValue().isPublic() ? "public" : "private")
                 );
             }
         }
