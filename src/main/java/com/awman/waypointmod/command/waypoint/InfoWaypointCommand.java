@@ -1,5 +1,6 @@
 package com.awman.waypointmod.command.waypoint;
 
+import com.awman.waypointmod.command.suggestion.WaypointSuggestionProvider;
 import com.awman.waypointmod.util.data.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
@@ -16,6 +17,7 @@ public class InfoWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("info")
                         .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
+                                .suggests((context, builder) -> new WaypointSuggestionProvider().getSuggestions(context, builder))
                                 .executes(context -> run(context,
                                     StringArgumentType.getString(context, "waypoint_id"))))));
     }
