@@ -40,18 +40,14 @@ public class WaypointData {
     }
 
     public static WaypointData fromNbt(NbtCompound nbt) {
+
         // Extract the author String
         String author = nbt.getString(WaypointData.AUTHOR_NBT_KEY);
-        WaypointMod.LOGGER.debug(author);
-
         // Extract the position array, then convert it to a BlockPos
         int[] arrayPos = nbt.getIntArray(WaypointData.POSITION_NBT_KEY);
         BlockPos position = new BlockPos(arrayPos[0], arrayPos[1], arrayPos[2]);
-
         // Extract the dimension String
         String dimension = nbt.getString(WaypointData.DIMENSION_NBT_KEY);
-        //RegistryKey<World> dimension = RegistryKey.of(RegistryKey.ofRegistry( /**/, new Identifier(stringDim[0], stringDim[1]));
-
         // Extract the visibility Boolean
         Boolean visibility = nbt.getBoolean(WaypointData.VISIBILITY_NBT_KEY);
 
