@@ -42,7 +42,7 @@ public class WaypointAuthorSuggestionProvider implements SuggestionProvider<Serv
         for (Map.Entry<String, Integer> entry : authors.entrySet()) {
             builder.suggest(
                     entry.getKey(),
-                    Text.of(entry.getValue().toString() + " waypoints")
+                    Text.of(entry.getValue().toString() + " waypoint" + (entry.getValue() > 1 ? "s" : ""))
             );
         }
 
