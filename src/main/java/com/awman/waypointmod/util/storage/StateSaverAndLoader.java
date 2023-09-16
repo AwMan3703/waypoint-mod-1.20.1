@@ -14,28 +14,39 @@ public class StateSaverAndLoader extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
+        // Convert the StateSaverAndLoader to an NBT compound, for saving
         nbt.put(WaypointMap.NBT_STORAGE_KEY, waypointMap.toNbt());
+
+        // Return it
         return nbt;
     }
 
     public static StateSaverAndLoader createFromNbt(NbtCompound nbt) {
-        StateSaverAndLoader state = new StateSaverAndLoader();
-        state.waypointMap = WaypointMap.fromNbt(nbt.getCompound(WaypointMap.NBT_STORAGE_KEY));
-        return state;
+        // This is Dave. Dave makes the data storage system work. Without Dave, the whole mod crashes.
+        StateSaverAndLoader dave = new StateSaverAndLoader();
+
+        // Initialize the StateSaverAndLoader
+        dave.waypointMap = WaypointMap.fromNbt(nbt.getCompound(WaypointMap.NBT_STORAGE_KEY));
+
+        // Return it
+        return dave;
     }
 
     public static StateSaverAndLoader getServerState(MinecraftServer server) {
+        // Get the server's persistentStateManager
         PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
 
+        // Initialize it
         StateSaverAndLoader state = persistentStateManager.getOrCreate(
                 StateSaverAndLoader::createFromNbt,
                 StateSaverAndLoader::new,
                 WaypointMod.MOD_ID
         );
 
-        // So that the data will be saved when closing
+        // So that the data will be saved when closing or pausing
         state.markDirty();
 
+        // Return it
         return state;
     }
 }
