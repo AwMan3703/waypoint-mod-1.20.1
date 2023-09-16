@@ -1,7 +1,6 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.command.suggestion.WaypointSuggestionProvider;
-import com.mojang.brigadier.Command;
+import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -17,7 +16,7 @@ public class FollowWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("follow")
                         .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
-                                .suggests((context, builder) -> new WaypointSuggestionProvider().getSuggestions(context, builder))
+                                .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
                                 .executes(context -> run(context, dispatcher)))));
     }
 

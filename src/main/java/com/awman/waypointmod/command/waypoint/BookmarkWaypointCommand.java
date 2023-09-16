@@ -1,6 +1,6 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.command.suggestion.WaypointSuggestionProvider;
+import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -16,7 +16,7 @@ public class BookmarkWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("bookmark")
                         .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
-                                .suggests((context, builder) -> new WaypointSuggestionProvider().getSuggestions(context, builder))
+                                .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
                                 .executes(context -> run(context, dispatcher)))));
     }
 

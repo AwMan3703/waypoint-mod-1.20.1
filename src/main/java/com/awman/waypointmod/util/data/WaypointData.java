@@ -1,13 +1,8 @@
 package com.awman.waypointmod.util.data;
 
-import com.awman.waypointmod.WaypointMod;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.scoreboard.AbstractTeam;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import org.spongepowered.asm.util.Bytecode;
-
-import java.beans.Visibility;
 
 public class WaypointData {
 

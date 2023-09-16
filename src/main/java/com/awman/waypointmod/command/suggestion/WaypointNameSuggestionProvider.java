@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class WaypointSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+public class WaypointNameSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
