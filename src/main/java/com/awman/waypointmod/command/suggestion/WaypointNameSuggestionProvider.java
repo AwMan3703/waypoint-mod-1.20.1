@@ -1,5 +1,6 @@
 package com.awman.waypointmod.command.suggestion;
 
+import com.awman.waypointmod.WaypointMod;
 import com.awman.waypointmod.util.data.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
 import com.mojang.brigadier.context.CommandContext;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-public class WaypointAuthorSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+public class WaypointNameSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
@@ -21,32 +22,37 @@ public class WaypointAuthorSuggestionProvider implements SuggestionProvider<Serv
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
-        // Create the authors hashmap, to store usernames and the # of waypoints they have created
-        HashMap<String, Integer> authors = new HashMap<>();
+        // Create the waypoints hashmap, to store waypoint names
+        HashMap<String, String> waypoints = new HashMap<>();
 
         // For each saved waypoint:
         for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
-            // Get the username
+            // Get the waypoint's name
+            String name = entry.getKey();
+            // Get the waypoint's author
             String author = entry.getValue().author;
 
-            // Put username in the hashmap, then:
-            // If the hashmap already has an entry for this user, increment it
-            // Otherwise, initialize it (just set it to 1)
-            authors.put(
-                    author, // The author's username
-                    authors.getOrDefault(author, 0) + 1 // Increment or initialize
-            );
+            if (
+                (context.getSource().getName().equals(author)) || // If the player is the waypoint's author OR
+                (context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) || // If the player is an op OR
+                entry.getValue().isPublic() // If the waypoint is public
+            ) {
+                // Put waypoint's name and author in the hashmap
+                waypoints.put(
+                        name, author + " // " + (entry.getValue().isPublic() ? "public" : "private")
+                );
+            }
         }
 
-        // Take all the authors and the # of their waypoints, and suggest them
-        for (Map.Entry<String, Integer> entry : authors.entrySet()) {
+        // Take all the waypoints and their author's name, and suggest them
+        for (Map.Entry<String, String> entry : waypoints.entrySet()) {
             builder.suggest(
                     entry.getKey(),
-                    Text.of(entry.getValue().toString() + " waypoint" + (entry.getValue() > 1 ? "s" : ""))
+                    Text.of("by @" + entry.getValue())
             );
         }
 
-        // Return (to) the future
+        // Return the suggestions
         return CompletableFuture.completedFuture(builder.build());
     }
 }

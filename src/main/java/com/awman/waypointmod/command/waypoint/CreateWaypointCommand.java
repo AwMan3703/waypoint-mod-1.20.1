@@ -1,7 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
-import com.awman.waypointmod.util.storage.WaypointData;
+import com.awman.waypointmod.util.data.StateSaverAndLoader;
+import com.awman.waypointmod.util.data.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -19,7 +19,15 @@ public class CreateWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("create")
                         .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
+                                .executes(context -> run(context,
+                                        StringArgumentType.getString(context, "waypoint_id"),
+                                        context.getSource().getPlayer().getBlockPos(),
+                                        context.getSource().getWorld().getDimension().toString()))
                                 .then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
+                                        .executes(context -> run(context,
+                                                StringArgumentType.getString(context, "waypoint_id"),
+                                                BlockPosArgumentType.getBlockPos(context, "position"),
+                                                context.getSource().getWorld().getDimension().toString()))
                                         .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                                                 .executes(context -> run(context,
                                                     StringArgumentType.getString(context, "waypoint_id"),
@@ -32,7 +40,9 @@ public class CreateWaypointCommand {
         context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
-        serverState.waypointMap.insert(waypointId, new WaypointData(author, position, dimensionIdentifier));
+        serverState.waypointMap.insert(waypointId,
+                new WaypointData(author, position, dimensionIdentifier, true) // Always public, since the feature is not yet implemented
+        );
         serverState.markDirty();
 
         context.getSource().sendMessage(Text.of("Waypoint created!"));

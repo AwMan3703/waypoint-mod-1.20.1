@@ -1,15 +1,14 @@
 package com.awman.waypointmod.command.waypoint;
 
+import com.awman.waypointmod.WaypointMod;
 import com.awman.waypointmod.command.suggestion.WaypointAuthorSuggestionProvider;
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
-import com.awman.waypointmod.util.storage.WaypointData;
+import com.awman.waypointmod.util.data.StateSaverAndLoader;
+import com.awman.waypointmod.util.data.WaypointData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.command.suggestion.SuggestionProviders;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.command.ServerCommandSource;
@@ -24,7 +23,7 @@ public class ListWaypointCommand {
                 .then(CommandManager.literal("list")
                         .executes(context -> run(context, null))
                         .then(CommandManager.argument("username", StringArgumentType.string())
-                                .suggests((context, builder) -> { return new WaypointAuthorSuggestionProvider().getSuggestions(context, builder); })
+                                .suggests((context, builder) -> new WaypointAuthorSuggestionProvider().getSuggestions(context, builder))
                                 .executes(context -> run(context, StringArgumentType.getString(context, "username"))))));
     }
 
@@ -45,7 +44,12 @@ public class ListWaypointCommand {
                 String waypointName = entry.getKey();
                 WaypointData waypointData = entry.getValue();
 
-                if ((listUserCommands && (waypointData.author.toString().equals(username.toString()))) || !listUserCommands) {
+                if (
+                    // If the waypoint is public OR the player is an op, AND
+                    (waypointData.isPublic() || context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) &&
+                    // If the waypoint is by the user we're searching for, OR we're listing all waypoints
+                    (!listUserCommands || (listUserCommands && waypointData.author.equals(username)))
+                ) {
                     context.getSource().sendMessage(Text.of(
                             "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));
                 }
