@@ -6,7 +6,7 @@ import net.minecraft.nbt.visitor.NbtElementVisitor;
 import java.util.*;
 import java.util.function.Function;
 
-public class PlayerMap extends HashMap<UUID, PlayerData> {
+public class PlayerMap extends HashMap<String, PlayerData> {
 
     public static final String NBT_STORAGE_KEY = "playerMap";
 
@@ -23,10 +23,10 @@ public class PlayerMap extends HashMap<UUID, PlayerData> {
     }
 
     // Find the keys of entries based on a filter function
-    public List<Map.Entry<UUID, PlayerData>> find(Function<Entry<UUID, PlayerData>, Boolean> f) {
-        List<Map.Entry<UUID, PlayerData>> results = Arrays.asList();
+    public List<Map.Entry<String, PlayerData>> find(Function<Entry<String, PlayerData>, Boolean> f) {
+        List<Map.Entry<String, PlayerData>> results = Arrays.asList();
 
-        for (Map.Entry<UUID, PlayerData> entry : this.entrySet()) {
+        for (Map.Entry<String, PlayerData> entry : this.entrySet()) {
             if (f.apply(entry)) results.add(entry);
         }
 
@@ -43,7 +43,7 @@ public class PlayerMap extends HashMap<UUID, PlayerData> {
         for (String rawUuid : nbt.getKeys()) {
 
             // Convert the key into an actual UUID
-            UUID uuid = UUID.fromString(rawUuid);
+            //UUID uuid = UUID.fromString(rawUuid);
 
             // Get the entry's content compound
             NbtCompound dataNbt = nbt.getCompound(rawUuid);
@@ -52,7 +52,7 @@ public class PlayerMap extends HashMap<UUID, PlayerData> {
             PlayerData playerData = PlayerData.fromNbt(dataNbt);
 
             // Add said object to the PlayerMap
-            playerMap.put(uuid, playerData);
+            playerMap.put(rawUuid, playerData);
         }
 
         return playerMap;
@@ -65,7 +65,7 @@ public class PlayerMap extends HashMap<UUID, PlayerData> {
         final NbtCompound nbt = new NbtCompound();
 
         // For each entry in the hashmap:
-        for (Map.Entry<UUID, PlayerData> entry : this.entrySet()) {
+        for (Map.Entry<String, PlayerData> entry : this.entrySet()) {
 
             // Get the player data's user and PlayerData content
             String uuid = entry.getKey().toString();

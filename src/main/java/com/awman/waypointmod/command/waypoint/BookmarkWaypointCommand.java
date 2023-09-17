@@ -55,7 +55,7 @@ public class BookmarkWaypointCommand {
         context.getSource().sendMessage(Text.of("made it here..."));
 
         try {
-            PlayerData playerData = serverState.playerMap.get(source.getPlayer().getUuid());
+            PlayerData playerData = serverState.playerMap.get(source.getPlayer().getUuid().toString());
             playerData.addBookmark(waypointId);
             source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks!"));
         } catch (CommandException e) {
