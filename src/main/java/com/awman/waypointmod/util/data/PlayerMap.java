@@ -11,12 +11,12 @@ public class PlayerMap extends HashMap<String, PlayerData> {
     public static final String NBT_STORAGE_KEY = "playerMap";
 
     // Add a new entry
-    public void insert(UUID key, PlayerData content) {
+    public void insert(String key, PlayerData content) {
         this.put(key, content);
     }
 
     // Modify an existing entry
-    public void edit(UUID key, Function<PlayerData, PlayerData> f) {
+    public void edit(String key, Function<PlayerData, PlayerData> f) {
         this.put(key, f.apply(
                 this.getOrDefault(key, new PlayerData())
         ));

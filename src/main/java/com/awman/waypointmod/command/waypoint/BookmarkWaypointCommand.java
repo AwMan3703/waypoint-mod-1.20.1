@@ -52,10 +52,10 @@ public class BookmarkWaypointCommand {
     public static int runAdd(CommandContext<ServerCommandSource> context, String waypointId) {
         ServerCommandSource source = context.getSource();
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
-        context.getSource().sendMessage(Text.of("made it here..."));
 
         try {
             PlayerData playerData = serverState.playerMap.get(source.getPlayer().getUuid().toString());
+            context.getSource().sendMessage(Text.of("made it here..."));
             playerData.addBookmark(waypointId);
             source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks!"));
         } catch (CommandException e) {
