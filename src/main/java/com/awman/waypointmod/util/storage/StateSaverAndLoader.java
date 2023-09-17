@@ -9,7 +9,7 @@ import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
-// I know what I'm doing :clueless:
+// I know what I'm doing (:clueless:)
 public class StateSaverAndLoader extends PersistentState {
 
     public WaypointMap waypointMap;

@@ -1,7 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
-import com.awman.waypointmod.util.storage.WaypointMap;
+import com.awman.waypointmod.util.data.WaypointMap;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;

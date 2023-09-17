@@ -13,10 +13,15 @@ public class PlayerData {
     // This player's bookmarked waypoints
     public List<String> bookmarks;
 
+    public PlayerData() {
+        this.bookmarks = Arrays.asList();
+    }
+
     public static PlayerData fromNbt(NbtCompound nbt) {
 
-        // Extract the bookmarks
+        // Extract the compound data, adding an if(null) condition for backwards compatibility
         List<String> bookmarks = nbt.getCompound(PlayerData.BOOKMARKS_NBT_KEY).getKeys().stream().toList();
+        if (bookmarks.equals(null)) bookmarks = Arrays.asList(new String[]{});
 
         // Return a PlayerData object
         PlayerData playerData = new PlayerData();

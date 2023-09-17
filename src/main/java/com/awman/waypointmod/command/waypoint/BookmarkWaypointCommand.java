@@ -18,19 +18,19 @@ public class BookmarkWaypointCommand {
         dispatcher.register(CommandManager.literal("waypoint")
                 .then(CommandManager.literal("bookmark")
                         .then(CommandManager.literal("view")
-                                .executes(context -> run_view(context))
+                                .executes(context -> run_view(context)))
                         .then(CommandManager.literal("add")
                                 .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
                                         .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
                                         .executes(context -> run_add(context,
-                                                StringArgumentType.getString(context, "waypoint_id"))))))));
+                                                StringArgumentType.getString(context, "waypoint_id")))))));
     }
 
     public static int run_view(CommandContext<ServerCommandSource> context) {
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
 
         if (!serverState.playerMap.containsKey(context.getSource().getPlayer().getUuid())) {
-            context.getSource().sendMessage(Text.of("No waypoints bookmarked!"));
+            context.getSource().sendMessage(Text.of("No bookmarked waypoints!"));
             return -1;
         }
 
@@ -46,7 +46,7 @@ public class BookmarkWaypointCommand {
 
     public static int run_add(CommandContext<ServerCommandSource> context, String waypointId) {
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
-        serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid(), uuid -> new PlayerData()).bookmarks.add(waypointId);
+        //serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid(), uuid -> new PlayerData()).bookmarks.add(waypointId);
 
         context.getSource().sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks! View them with [/waypoint bookmark view]"));
 

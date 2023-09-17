@@ -38,7 +38,8 @@ public class InfoWaypointCommand {
             context.getSource().sendMessage(Text.of("Waypoint data:"));
             context.getSource().sendMessage(Text.of(
                     "-> \"" + waypointId + "\", created by " +
-                            "@" + waypointData.author + ": [" +
+                            "@" + waypointData.author + " (" +
+                            (waypointData.isPublic() ? "public" : "private") + "): [" +
                             waypointData.coordinates.toShortString() + " in " +
                             waypointData.dimension.toString() + "]"));
 

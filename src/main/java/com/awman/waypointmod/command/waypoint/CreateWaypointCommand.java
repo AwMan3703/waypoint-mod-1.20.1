@@ -43,7 +43,6 @@ public class CreateWaypointCommand {
         serverState.waypointMap.insert(waypointId,
                 new WaypointData(
                         context.getSource().getPlayer().getName().getString(),
-                        context.getSource().getPlayer().getUuid(),
                         position,
                         dimensionIdentifier,
                         true) // Always public, since the feature is not yet implemented
