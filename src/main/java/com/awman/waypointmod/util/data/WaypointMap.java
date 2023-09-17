@@ -63,7 +63,7 @@ public class WaypointMap extends HashMap<String, WaypointData> {
             String waypointName = entry.getKey();
             WaypointData waypointData = entry.getValue();
 
-            // Convert the data to Nbt
+            // Convert the data to Nbt-friendly
             NbtCompound waypointDataCompound = waypointData.toNbt();
 
             // Finally, add this entry to the main compound

@@ -1,22 +1,19 @@
 package com.awman.waypointmod.util.data;
 
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.system.Platform;
 
 import java.util.UUID;
 
 public class WaypointData {
 
     // constants for nbt storage keys
-    public static final String AUTHOR_NBT_KEY = "author";
-    public static final String AUTHOR_UUID_NBT_KEY = "author-uuid";
-    public static final String POSITION_NBT_KEY = "position";
-    public static final String DIMENSION_NBT_KEY = "dimension";
-    public static final String VISIBILITY_NBT_KEY = "visibility";
+    private static final String AUTHOR_NBT_KEY = "author";
+    private static final String AUTHOR_UUID_NBT_KEY = "author-uuid";
+    private static final String POSITION_NBT_KEY = "position";
+    private static final String DIMENSION_NBT_KEY = "dimension";
+    private static final String VISIBILITY_NBT_KEY = "visibility";
 
     // The player who created the waypoint
     public String author;
@@ -34,6 +31,7 @@ public class WaypointData {
     public Identifier dimension;
     public boolean isDimension(Identifier f) { return this.dimension.equals(f); }
 
+    // Wether this waypoint is visible to everyone
     private final Boolean visibility; // True = public ; False = private
     public boolean isPublic() { return this.visibility.equals(true); }
 

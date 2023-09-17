@@ -1,6 +1,7 @@
 package com.awman.waypointmod.util.storage;
 
 import com.awman.waypointmod.WaypointMod;
+import com.awman.waypointmod.util.data.PlayerMap;
 import com.awman.waypointmod.util.data.WaypointMap;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
@@ -11,12 +12,14 @@ import net.minecraft.world.World;
 // I know what I'm doing :clueless:
 public class StateSaverAndLoader extends PersistentState {
 
-    public WaypointMap waypointMap;// = new WaypointMap();
+    public WaypointMap waypointMap;
+    public PlayerMap playerMap;
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         // Convert the StateSaverAndLoader to an NBT compound, for saving
         nbt.put(WaypointMap.NBT_STORAGE_KEY, waypointMap.toNbt());
+        nbt.put(PlayerMap.NBT_STORAGE_KEY, playerMap.toNbt());
 
         // Return it
         return nbt;
@@ -28,6 +31,7 @@ public class StateSaverAndLoader extends PersistentState {
 
         // Initialize the StateSaverAndLoader
         dave.waypointMap = WaypointMap.fromNbt(nbt.getCompound(WaypointMap.NBT_STORAGE_KEY));
+        dave.playerMap = PlayerMap.fromNbt(nbt.getCompound(PlayerMap.NBT_STORAGE_KEY));
 
         // Return it
         return dave;
