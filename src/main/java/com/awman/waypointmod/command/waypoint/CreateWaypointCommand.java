@@ -22,12 +22,12 @@ public class CreateWaypointCommand {
                                 .executes(context -> run(context,
                                         StringArgumentType.getString(context, "waypoint_id"),
                                         context.getSource().getPlayer().getBlockPos(),
-                                        context.getSource().getWorld().getDimension().toString()))
+                                        context.getSource().getWorld().getDimensionKey().getValue().toString()))
                                 .then(CommandManager.argument("position", BlockPosArgumentType.blockPos())
                                         .executes(context -> run(context,
                                                 StringArgumentType.getString(context, "waypoint_id"),
                                                 BlockPosArgumentType.getBlockPos(context, "position"),
-                                                context.getSource().getWorld().getDimension().toString()))
+                                                context.getSource().getWorld().getDimensionKey().getValue().toString()))
                                         .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                                                 .executes(context -> run(context,
                                                     StringArgumentType.getString(context, "waypoint_id"),

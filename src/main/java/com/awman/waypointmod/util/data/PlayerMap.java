@@ -15,6 +15,13 @@ public class PlayerMap extends HashMap<UUID, PlayerData> {
         this.put(key, content);
     }
 
+    // Modify an existing entry
+    public void edit(UUID key, Function<PlayerData, PlayerData> f) {
+        this.put(key, f.apply(
+                this.getOrDefault(key, new PlayerData())
+        ));
+    }
+
     // Find the keys of entries based on a filter function
     public List<Map.Entry<UUID, PlayerData>> find(Function<Entry<UUID, PlayerData>, Boolean> f) {
         List<Map.Entry<UUID, PlayerData>> results = Arrays.asList();

@@ -12,6 +12,12 @@ public class PlayerData {
 
     // This player's bookmarked waypoints
     public List<String> bookmarks;
+    // Add a bookmark
+    public void addBookmark(String bookmark) {
+        if (!this.bookmarks.contains(bookmark)) {
+            this.bookmarks.add(bookmark);
+        }
+    }
 
     public PlayerData() {
         this.bookmarks = Arrays.asList();
