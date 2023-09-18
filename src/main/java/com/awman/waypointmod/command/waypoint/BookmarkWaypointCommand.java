@@ -2,6 +2,7 @@ package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
 import com.awman.waypointmod.util.data.PlayerData;
+import com.awman.waypointmod.util.data.WaypointData;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -11,8 +12,10 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BookmarkWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
@@ -44,10 +47,12 @@ public class BookmarkWaypointCommand {
                 return -1;
             }
 
-            List<String> bookmarks = serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks;
-            for (String bookmark : bookmarks) {
+            HashMap<String, WaypointData> bookmarks = serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks;
+            context.getSource().sendMessage(Text.of("Here's a list of your bookmarked waypoints"));
+            for (Map.Entry<String, WaypointData> entry : bookmarks.entrySet()) {
                 context.getSource().sendMessage(Text.of(
-                        "->" + bookmark
+                        "-> " + entry.getKey() +
+                            ", created by @" + entry.getValue().author
                 ));
             }
         }catch (Exception e){
@@ -63,7 +68,8 @@ public class BookmarkWaypointCommand {
 
         try {
             PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
-            playerData.addBookmark(waypointId);
+            WaypointData waypointData = serverState.waypointMap.getOrDefault(waypointId, new WaypointData("unknown_author", new BlockPos(0, 0, 0), "minecraft:overworld", true));
+            playerData.addBookmark(waypointId, waypointData);
             source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks! Run [/waypoint bookmark view] to view them"));
             return 1;
         } catch (CommandException e) {
