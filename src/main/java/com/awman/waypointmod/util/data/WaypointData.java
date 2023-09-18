@@ -4,8 +4,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.UUID;
-
 public class WaypointData {
 
     // constants for nbt storage keys
@@ -38,7 +36,6 @@ public class WaypointData {
     }
 
     public static WaypointData fromNbt(NbtCompound nbt) {
-
         // Extract the compound data, adding an if(null) condition for backwards compatibility
         String author = nbt.getString(WaypointData.AUTHOR_NBT_KEY);
         if (author.equals(null)) author = "<unknown_author>";

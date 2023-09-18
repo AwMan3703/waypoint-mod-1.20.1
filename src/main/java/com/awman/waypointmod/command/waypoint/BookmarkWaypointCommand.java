@@ -1,6 +1,5 @@
 package com.awman.waypointmod.command.waypoint;
 
-import net.minecraft.text.*;
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
 import com.awman.waypointmod.util.data.PlayerData;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
@@ -25,25 +24,34 @@ public class BookmarkWaypointCommand {
                                 .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
                                         .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
                                         .executes(context -> runAdd(context,
+                                                StringArgumentType.getString(context, "waypoint_id")))))
+                        .then(CommandManager.literal("remove")
+                                .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
+                                        .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
+                                        .executes(context -> runRemove(context,
                                                 StringArgumentType.getString(context, "waypoint_id")))))));
     }
 
     public static int runView(CommandContext<ServerCommandSource> context) {
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
 
-        if (
-            // If this player's waypoint list is empty
-            serverState.playerMap.get(context.getSource().getPlayer().getUuid()).bookmarks.isEmpty()
-        ) {
-            context.getSource().sendMessage(Text.of("No bookmarked waypoints!"));
-            return -1;
-        }
+        try {
+            if (
+                // If this player's waypoint list is empty
+                    serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks.isEmpty()
+            ) {
+                context.getSource().sendMessage(Text.of("No bookmarked waypoints!"));
+                return -1;
+            }
 
-        List<String> bookmarks = serverState.playerMap.get(context.getSource().getPlayer().getUuid()).bookmarks;
-        for (String bookmark : bookmarks) {
-            context.getSource().sendMessage(Text.of(
-                    "->" + bookmark
-            ));
+            List<String> bookmarks = serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks;
+            for (String bookmark : bookmarks) {
+                context.getSource().sendMessage(Text.of(
+                        "->" + bookmark
+                ));
+            }
+        }catch (Exception e){
+            context.getSource().sendMessage(Text.of(""+e));
         }
 
         return 1;
@@ -54,16 +62,28 @@ public class BookmarkWaypointCommand {
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
         try {
-            PlayerData playerData = serverState.playerMap.get(source.getPlayer().getUuid().toString());
-            context.getSource().sendMessage(Text.of("made it here..."));
+            PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
             playerData.addBookmark(waypointId);
-            source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks!"));
+            source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks! Run [/waypoint bookmark view] to view them"));
+            return 1;
         } catch (CommandException e) {
             source.sendMessage(Text.of("Error adding waypoint: " + e.getMessage()));
+            return -1;
         }
+    }
 
-        //context.getSource().sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks! View them with [/waypoint bookmark view]"));
+    public static int runRemove(CommandContext<ServerCommandSource> context, String waypointId) {
+        ServerCommandSource source = context.getSource();
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
-        return 1;
+        try {
+            PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
+            playerData.deleteBookmark(waypointId);
+            source.sendMessage(Text.of("\"" + waypointId + "\" removed from your bookmarks! Run [/waypoint bookmark view] to view them"));
+            return 1;
+        } catch (CommandException e) {
+            source.sendMessage(Text.of("Error removing waypoint: " + e.getMessage()));
+            return -1;
+        }
     }
 }

@@ -1,9 +1,11 @@
 package com.awman.waypointmod.util.data;
 
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.visitor.NbtElementVisitor;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class PlayerMap extends HashMap<String, PlayerData> {
@@ -68,8 +70,11 @@ public class PlayerMap extends HashMap<String, PlayerData> {
         for (Map.Entry<String, PlayerData> entry : this.entrySet()) {
 
             // Get the player data's user and PlayerData content
-            String uuid = entry.getKey().toString();
+            String uuid = entry.getKey();
             PlayerData playerData = entry.getValue();
+
+            // If the player data is determined to be superfluous, just don't save it
+            if (playerData.isDeletable()) { continue; }
 
             // Convert the data to Nbt-friendly
             NbtCompound playerDataCompound = playerData.toNbt();

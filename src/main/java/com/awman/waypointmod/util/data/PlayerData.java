@@ -2,10 +2,17 @@ package com.awman.waypointmod.util.data;
 
 import net.minecraft.nbt.NbtCompound;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerData {
+
+    public boolean isDeletable() { // Wether it is safe to delete this player's data on save
+        return
+                (this.bookmarks.isEmpty()) // If the player has no bookmarks saved
+                // && ( another_condition || another_alternative )
+        ;
+    }
 
     // constants for nbt storage keys
     private static final String BOOKMARKS_NBT_KEY = "bookmarks";
@@ -14,20 +21,19 @@ public class PlayerData {
     public List<String> bookmarks;
     // Add a bookmark
     public void addBookmark(String bookmark) {
-        if (!this.bookmarks.contains(bookmark)) {
-            this.bookmarks.add(bookmark);
-        }
+        if (!this.bookmarks.contains(bookmark)) this.bookmarks.add(bookmark);
+    }
+    public void deleteBookmark(String bookmark) {
+        this.bookmarks.remove(bookmark);
     }
 
     public PlayerData() {
-        this.bookmarks = Arrays.asList();
+        this.bookmarks = new ArrayList<>();
     }
 
     public static PlayerData fromNbt(NbtCompound nbt) {
-
         // Extract the compound data, adding an if(null) condition for backwards compatibility
         List<String> bookmarks = nbt.getCompound(PlayerData.BOOKMARKS_NBT_KEY).getKeys().stream().toList();
-        if (bookmarks.equals(null)) bookmarks = Arrays.asList(new String[]{});
 
         // Return a PlayerData object
         PlayerData playerData = new PlayerData();
