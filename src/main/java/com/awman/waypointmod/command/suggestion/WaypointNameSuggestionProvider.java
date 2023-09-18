@@ -65,20 +65,22 @@ public class WaypointNameSuggestionProvider implements SuggestionProvider<Server
         HashMap<String, String> waypoints = new HashMap<>();
 
         // For each waypoint in the player's bookmarks:
-        for (Map.Entry<String, WaypointData> entry : serverState.playerMap.get(context.getSource().getPlayer().getUuid().toString()).bookmarks.entrySet()) {
+        for (String entry : serverState.playerMap.get(context.getSource().getPlayer().getUuid().toString()).bookmarks) {
             // Get the waypoint's name
-            String name = entry.getKey();
+            String name = entry;
+            // Get the waypoint's data
+            WaypointData waypointData = serverState.waypointMap.get(entry);
             // Get the waypoint's author
-            String author = entry.getValue().author;
+            String author = waypointData.author;
 
             if (
                     (context.getSource().getName().equals(author)) || // If the player is the waypoint's author OR
-                            (context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) || // If the player is an op OR
-                            entry.getValue().isPublic() // If the waypoint is public
+                        (context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) || // If the player is an op OR
+                        waypointData.isPublic() // If the waypoint is public
             ) {
                 // Put waypoint's name and author in the hashmap
                 waypoints.put(
-                        name, author + " // " + (entry.getValue().isPublic() ? "public" : "private")
+                        name, author + " // " + (waypointData.isPublic() ? "public" : "private")
                 );
             }
         }
