@@ -55,4 +55,43 @@ public class WaypointNameSuggestionProvider implements SuggestionProvider<Server
         // Return the suggestions
         return CompletableFuture.completedFuture(builder.build());
     }
+
+    public CompletableFuture<Suggestions> getBookmarkSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
+        ServerCommandSource source = context.getSource();
+
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
+
+        // Create the waypoints hashmap, to store waypoint names
+        HashMap<String, String> waypoints = new HashMap<>();
+
+        // For each waypoint in the player's bookmarks:
+        for (Map.Entry<String, WaypointData> entry : serverState.playerMap.get(context.getSource().getPlayer().getUuid().toString()).bookmarks.entrySet()) {
+            // Get the waypoint's name
+            String name = entry.getKey();
+            // Get the waypoint's author
+            String author = entry.getValue().author;
+
+            if (
+                    (context.getSource().getName().equals(author)) || // If the player is the waypoint's author OR
+                            (context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) || // If the player is an op OR
+                            entry.getValue().isPublic() // If the waypoint is public
+            ) {
+                // Put waypoint's name and author in the hashmap
+                waypoints.put(
+                        name, author + " // " + (entry.getValue().isPublic() ? "public" : "private")
+                );
+            }
+        }
+
+        // Take all the waypoints and their author's name, and suggest them
+        for (Map.Entry<String, String> entry : waypoints.entrySet()) {
+            builder.suggest(
+                    entry.getKey(),
+                    Text.of("by @" + entry.getValue())
+            );
+        }
+
+        // Return the suggestions
+        return CompletableFuture.completedFuture(builder.build());
+    }
 }

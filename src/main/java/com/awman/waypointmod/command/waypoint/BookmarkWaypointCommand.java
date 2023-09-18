@@ -30,7 +30,7 @@ public class BookmarkWaypointCommand {
                                                 StringArgumentType.getString(context, "waypoint_id")))))
                         .then(CommandManager.literal("remove")
                                 .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
-                                        .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
+                                        .suggests((context, builder) -> new WaypointNameSuggestionProvider().getBookmarkSuggestions(context, builder))
                                         .executes(context -> runRemove(context,
                                                 StringArgumentType.getString(context, "waypoint_id")))))));
     }
