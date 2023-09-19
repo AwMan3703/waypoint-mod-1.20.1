@@ -2,16 +2,10 @@ package com.awman.waypointmod.util;
 
 import com.awman.waypointmod.command.waypoint.*;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-
 public class ModRegistries {
     public static void registerEverything() {
         // Register everything
         registerCommands();
-        registerSuggestionProviders();
-    }
-
-    private static void registerSuggestionProviders() {
-        //SuggestionProviders.register(WaypointAuthorSuggestionProvider.ID, new WaypointAuthorSuggestionProvider());
     }
 
     private static void registerCommands() {

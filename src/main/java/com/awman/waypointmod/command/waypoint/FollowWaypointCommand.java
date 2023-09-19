@@ -1,11 +1,16 @@
 package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
+import com.awman.waypointmod.util.data.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.scoreboard.ScoreboardCriterion;
+import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,7 +34,16 @@ public class FollowWaypointCommand {
             String playerName = player.getName().getString();
             CommandManager commandManager = context.getSource().getServer().getCommandManager();
             CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
+            WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
+            // <DATAPACK METHOD>
+            // Add the waypoint's position to the player's NBT, to read it from the datapack
+            player.getScoreboard().setObjectiveSlot(waypointData.coordinates.getX(), new ScoreboardObjective(player.getScoreboard(), "fh_waypointX", ScoreboardCriterion.DUMMY, Text.of("FH - waypoint data"), ScoreboardCriterion.RenderType.INTEGER));
+            player.getScoreboard().setObjectiveSlot(waypointData.coordinates.getY(), new ScoreboardObjective(player.getScoreboard(), "fh_waypointY", ScoreboardCriterion.DUMMY, Text.of("FH - waypoint data"), ScoreboardCriterion.RenderType.INTEGER));
+            player.getScoreboard().setObjectiveSlot(waypointData.coordinates.getZ(), new ScoreboardObjective(player.getScoreboard(), "fh_waypointZ", ScoreboardCriterion.DUMMY, Text.of("FH - waypoint data"), ScoreboardCriterion.RenderType.INTEGER));
+
+            // <TITLE COMMAND METHOD>
             String disableOutput = "gamerule sendCommandFeedback false";
 
             String commandTimes =
@@ -41,9 +55,9 @@ public class FollowWaypointCommand {
                     "1"; // Fade out    /
 
             String command =
-                    "title " +
+                    "execute as " +
                     playerName +
-                    " actionbar {" +
+                    " run title @s actionbar {" +
                     "\"text\" : \"[Waypoint tracking info here]\"," +
                     "\"color\" : \"red\"" +
                     "}";
