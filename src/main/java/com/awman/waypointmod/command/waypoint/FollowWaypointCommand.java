@@ -42,7 +42,7 @@ public class FollowWaypointCommand {
             String command_objCreate = "scoreboard objectives add fh_waypointX dummy";
             String command_objSet = "scoreboard players set " + playerName + " fh_waypointX 123";
 
-            String command_fire = "trigger fh_toggle";
+            String command_fire = "trigger ch_toggle";
 
             //commandManager.execute(dispatcher.parse(command_disableOutput, context.getSource()), command_disableOutput);
             commandManager.execute(dispatcher.parse(command_objCreate, context.getSource()), command_objCreate);
