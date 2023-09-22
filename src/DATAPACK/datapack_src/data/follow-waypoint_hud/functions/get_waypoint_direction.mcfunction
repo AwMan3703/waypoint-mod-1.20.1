@@ -10,19 +10,15 @@ tag @a remove ch_east
 tag @a remove ch_west
 tag @a remove ch_arrived
 
-scoreboard objectives add selfX dummy
-scoreboard objectives add selfZ dummy
 scoreboard objectives add waypointX dummy
 scoreboard objectives add waypointZ dummy
 scoreboard objectives add distanceX dummy
 scoreboard objectives add distanceZ dummy
 
 # Calculate the difference in X coordinates
-execute store result score @s selfX run data get entity @s Pos[0] 1.0
 scoreboard players set @s waypointX 21
 
 # Calculate the difference in Z coordinates
-execute store result score @s selfZ run data get entity @s Pos[2] 1.0
 scoreboard players set @s waypointZ -25
 
 
