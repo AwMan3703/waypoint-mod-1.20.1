@@ -16,11 +16,3 @@ scoreboard players set #60 ch_constant 60
 scoreboard players set #5 ch_constant 5
 scoreboard players set #18 ch_constant 18
 scoreboard players set #24 ch_constant 24
-
-scoreboard objectives add ch_daytime dummy
-scoreboard objectives add ch_allMinutes dummy
-scoreboard objectives add ch_allHours dummy
-
-scoreboard objectives add ch_hh dummy
-
-scoreboard objectives add ch_mm dummy
