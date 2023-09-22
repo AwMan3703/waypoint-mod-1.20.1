@@ -8,5 +8,5 @@ scoreboard players set @a[scores={ch_toggleCons=0}] ch_toggleCons -1
 scoreboard players enable @a ch_toggle
 execute as @a[scores={ch_toggle=1..}] at @s run function follow-waypoint_hud:toggle_trigger
 
-execute as @a[scores={ch_toggleCons=1..}] at @s run function follow-waypoint_hud:get_player_coords
+#execute as @a[scores={ch_toggleCons=1..}] at @s run function follow-waypoint_hud:get_waypoint_distance
 execute as @a[scores={ch_toggleCons=1..}] at @s run function follow-waypoint_hud:display_hud
