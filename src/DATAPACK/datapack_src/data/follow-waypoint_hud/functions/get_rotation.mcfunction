@@ -51,9 +51,9 @@ execute if score @s distanceX < #0 ch_constant if score @s distanceZ = #0 ch_con
 execute if score @s distanceX > #0 ch_constant if score @s distanceZ = #0 ch_constant run tag @s add ch_east
 # NE
 execute if score @s distanceX > #0 ch_constant if score @s distanceZ < #0 ch_constant run tag @s add ch_northeast
-# NW--
-execute if score @s distanceZ < #0 ch_constant if score @s distanceX < #0 ch_constant run tag @s add ch_northwest
+# NW
+execute if score @s distanceZ > #0 ch_constant if score @s distanceX > #0 ch_constant run tag @s add ch_northwest
 # SE
 execute if score @s distanceX > #0 ch_constant if score @s distanceZ > #0 ch_constant run tag @s add ch_southeast
-# SW--
-execute if score @s distanceZ < #0 ch_constant if score @s distanceX > #0 ch_constant run tag @s add ch_southwest
+# SW
+execute if score @s distanceZ > #0 ch_constant if score @s distanceX < #0 ch_constant run tag @s add ch_southwest
