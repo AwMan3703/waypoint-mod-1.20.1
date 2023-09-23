@@ -37,15 +37,15 @@ public class FollowWaypointCommand {
             // <DATAPACK METHOD>
             // Add the waypoint's position to the player's NBT, to read it from the datapack
             String command_disableOutput = "gamerule sendCommandFeedback false";
-            String command_objCreate = "scoreboard objectives add fh_waypointX dummy";
-            String command_objSet = "scoreboard players set " + playerName + " fh_waypointX 123";
-
+            String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
+            String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
+            String command_objSet_Z = "scoreboard players set " + playerName + " fh_waypointZ " + waypointData.coordinates.getZ();
             String command_fire = "trigger ch_toggle";
 
             commandManager.execute(dispatcher.parse(command_disableOutput, context.getSource()), command_disableOutput);
-            commandManager.execute(dispatcher.parse(command_objCreate, context.getSource()), command_objCreate);
-            commandManager.execute(dispatcher.parse(command_objSet, context.getSource()), command_objSet);
-
+            commandManager.execute(dispatcher.parse(command_objSet_X, context.getSource()), command_objSet_X);
+            commandManager.execute(dispatcher.parse(command_objSet_Y, context.getSource()), command_objSet_Y);
+            commandManager.execute(dispatcher.parse(command_objSet_Z, context.getSource()), command_objSet_Z);
             commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
 
             context.getSource().sendMessage(Text.of("Following waypoint!!!! :)))"));
