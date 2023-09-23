@@ -8,12 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.scoreboard.ScoreboardCriterion;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 
 public class FollowWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
@@ -44,37 +42,11 @@ public class FollowWaypointCommand {
 
             String command_fire = "trigger ch_toggle";
 
-            //commandManager.execute(dispatcher.parse(command_disableOutput, context.getSource()), command_disableOutput);
+            commandManager.execute(dispatcher.parse(command_disableOutput, context.getSource()), command_disableOutput);
             commandManager.execute(dispatcher.parse(command_objCreate, context.getSource()), command_objCreate);
             commandManager.execute(dispatcher.parse(command_objSet, context.getSource()), command_objSet);
 
             commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
-
-            // <TITLE COMMAND METHOD>
-            /* String disableOutput = "gamerule sendCommandFeedback false";
-
-            String commandTimes =
-                    "title " +
-                    playerName +
-                    " times " +
-                    "1 " + // Fade in   \
-                    "20 " + // Stay      } Time in game ticks. TRAILING SPACE IS IMPORTANT
-                    "1"; // Fade out    /
-
-            String command =
-                    "execute as " +
-                    playerName +
-                    " run title @s actionbar {" +
-                    "\"text\" : \"[Waypoint tracking info here]\"," +
-                    "\"color\" : \"red\"" +
-                    "}";
-
-            // Shut up commands!!!
-            commandManager.execute(dispatcher.parse(disableOutput, context.getSource()), disableOutput);
-            // Set the title times
-            commandManager.execute(dispatcher.parse(commandTimes, context.getSource()), commandTimes);
-            // Run the actual title command
-            commandManager.execute(dispatcher.parse(command, context.getSource()), command);*/
 
             context.getSource().sendMessage(Text.of("Following waypoint!!!! :)))"));
             return 1;

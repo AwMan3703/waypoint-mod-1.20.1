@@ -12,6 +12,7 @@ scoreboard objectives add ch_facing dummy
 scoreboard objectives add ch_hud_textcolor dummy
 
 scoreboard objectives add ch_constant dummy
+scoreboard players set #neg1 ch_constant -1
 scoreboard players set #0 ch_constant 0
 scoreboard players set #1 ch_constant 1
 scoreboard players set #6 ch_constant 6
