@@ -83,17 +83,17 @@ public class FollowWaypointCommand {
 
         String command_fire = "trigger ch_toggle";
 
-        if (playerData.followingWaypointId.equals(null)) {
+        if (!playerData.followingWaypointId.equals(null)) {
             feedbackRule.set(false, server);
             commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
             feedbackRule.set(true, server);
+            context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
         } else {
             context.getSource().sendMessage(Text.of("You're not following a waypoint!"));
         }
 
         playerData.followingWaypointId = null;
 
-        context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
         return 1;
     }
 }
