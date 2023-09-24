@@ -60,7 +60,7 @@ public class FollowWaypointCommand {
 
             playerData.followingWaypointId = waypointId;
 
-            context.getSource().sendMessage(Text.of("Following waypoint \"" + waypointId + "\"!"));
+            context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
             return 1;
         } catch (Exception e) {
             context.getSource().sendMessage(Text.of("" + e));
@@ -87,7 +87,7 @@ public class FollowWaypointCommand {
         commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
         feedbackRule.set(true, server);
 
-        context.getSource().sendMessage(Text.of("Unfollowing \"" + playerData.followingWaypointId + "\""));
+        context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
         return 1;
     }
 }
