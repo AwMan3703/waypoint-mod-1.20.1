@@ -1,6 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
+import com.awman.waypointmod.util.data.PlayerData;
 import com.awman.waypointmod.util.data.WaypointData;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
@@ -27,14 +28,17 @@ public class FollowWaypointCommand {
 
     public static int runFollow(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
         try {
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
+
             ServerPlayerEntity player = context.getSource().getPlayer();
             String playerName = player.getName().getString();
-            CommandManager commandManager = context.getSource().getServer().getCommandManager();
-            CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
-            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
+            PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
+
             WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
-            // <DATAPACK METHOD>
+            CommandManager commandManager = context.getSource().getServer().getCommandManager();
+            CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
+
             // Add the waypoint's position to the player's NBT, to read it from the datapack
             String command_disableOutput = "gamerule sendCommandFeedback false";
             String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
@@ -48,7 +52,9 @@ public class FollowWaypointCommand {
             commandManager.execute(dispatcher.parse(command_objSet_Z, context.getSource()), command_objSet_Z);
             commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
 
-            context.getSource().sendMessage(Text.of("Following waypoint!!!! :)))"));
+            playerData.followingWaypointId = waypointId;
+
+            context.getSource().sendMessage(Text.of("Following waypoint \"" + waypointId + "\"!"));
             return 1;
         } catch (Exception e) {
             context.getSource().sendMessage(Text.of("" + e));
@@ -57,7 +63,18 @@ public class FollowWaypointCommand {
     }
 
     public static int runUnfollow(CommandContext<ServerCommandSource> context) {
-        context.getSource().sendMessage(Text.of("Waypoint unfollowed :("));
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
+
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
+
+        CommandManager commandManager = context.getSource().getServer().getCommandManager();
+        CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
+
+        String command_fire = "trigger ch_toggle";
+        commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
+
+        context.getSource().sendMessage(Text.of("Unfollowing \"" + playerData.followingWaypointId + "\""));
         return 1;
     }
 }

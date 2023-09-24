@@ -16,6 +16,7 @@ public class PlayerData {
 
     // constants for nbt storage keys
     private static final String BOOKMARKS_NBT_KEY = "bookmarks";
+    private static final String FOLLOWING_WAYPOINT_ID_NBT_KEY = "fwid";
 
     // This player's bookmarked waypoints
     public List<String> bookmarks;
@@ -27,6 +28,9 @@ public class PlayerData {
         this.bookmarks.remove(bookmark);
     }
 
+    // The waypoint this player is following (if any)
+    public String followingWaypointId;
+
     public PlayerData() {
         this.bookmarks = new ArrayList<>();
     }
@@ -35,9 +39,12 @@ public class PlayerData {
         // Extract the compound data, and create a bookmark map
         List<String> bookmarkData = nbt.getCompound(PlayerData.BOOKMARKS_NBT_KEY).getKeys().stream().toList();
 
+        String followingWaypointId = nbt.getString(PlayerData.FOLLOWING_WAYPOINT_ID_NBT_KEY);
+
         // Return a PlayerData object
         PlayerData playerData = new PlayerData();
         playerData.bookmarks = bookmarkData;
+        playerData.followingWaypointId = followingWaypointId;
         return playerData;
     }
     public NbtCompound toNbt() {
@@ -51,6 +58,7 @@ public class PlayerData {
         }
         nbt.put(PlayerData.BOOKMARKS_NBT_KEY,
                 bookmarksList);
+        nbt.putString(PlayerData.FOLLOWING_WAYPOINT_ID_NBT_KEY, followingWaypointId);
 
         // Return the NbtCompound object
         return nbt;
