@@ -44,7 +44,7 @@ public class BookmarkWaypointCommand {
         }
 
         List<String> bookmarks = serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks;
-        context.getSource().sendMessage(Text.of("Your bookmarked waypoints"));
+        context.getSource().sendMessage(Text.of("Your bookmarked waypoints:"));
         for (String entry : bookmarks) {
             context.getSource().sendMessage(Text.of(
                     "-> " + entry +
