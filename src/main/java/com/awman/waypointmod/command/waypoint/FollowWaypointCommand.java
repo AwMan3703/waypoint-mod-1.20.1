@@ -44,6 +44,8 @@ public class FollowWaypointCommand {
         CommandManager commandManager = context.getSource().getServer().getCommandManager();
         CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
+        // TODO: add dimension check, only follow waypoint if correct dimension
+
         // Add the waypoint's position to the player's NBT, to read it from the datapack
         String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
         String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
