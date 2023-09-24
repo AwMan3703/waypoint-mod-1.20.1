@@ -32,7 +32,7 @@ public class DeleteWaypointCommand {
             context.getSource().sendMessage(Text.of("Waypoint not found!"));
             return -1;
         } else if (
-                (context.getSource().getName() != waypointMap.get(waypointId).author) // The player is the author
+                context.getSource().getName().equals(waypointMap.get(waypointId).author) // The player is the author
                 || (context.getSource().hasPermissionLevel(1)) // or The player is an op
         ) {
             // If the player doesn't have the necessary permissions:
