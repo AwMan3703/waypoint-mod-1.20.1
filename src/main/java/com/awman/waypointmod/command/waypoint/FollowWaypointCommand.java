@@ -29,25 +29,23 @@ public class FollowWaypointCommand {
     }
 
     public static int runFollow(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
+        GameRules rules = context.getSource().getWorld().getGameRules();
+        GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
+
+        MinecraftServer server = context.getSource().getServer();
+        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
+
+        ServerPlayerEntity player = context.getSource().getPlayer();
+        String playerName = player.getName().getString();
+        PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
+
+        WaypointData waypointData = serverState.waypointMap.get(waypointId);
+
+        CommandManager commandManager = context.getSource().getServer().getCommandManager();
+        CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
+
         try {
-            GameRules rules = context.getSource().getWorld().getGameRules();
-            GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
-
-            MinecraftServer server = context.getSource().getServer();
-            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
-
-            ServerPlayerEntity player = context.getSource().getPlayer();
-            String playerName = player.getName().getString();
-            PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
-
-            WaypointData waypointData = serverState.waypointMap.get(waypointId);
-
-            CommandManager commandManager = context.getSource().getServer().getCommandManager();
-            CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
-
             // Add the waypoint's position to the player's NBT, to read it from the datapack
-            String command_disableOutput = "gamerule sendCommandFeedback false";
-            String command_enableOutput = "gamerule sendCommandFeedback true";
             String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
             String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
             String command_objSet_Z = "scoreboard players set " + playerName + " fh_waypointZ " + waypointData.coordinates.getZ();
@@ -83,8 +81,6 @@ public class FollowWaypointCommand {
         CommandManager commandManager = context.getSource().getServer().getCommandManager();
         CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
-        String command_disableOutput = "gamerule sendCommandFeedback false";
-        String command_enableOutput = "gamerule sendCommandFeedback true";
         String command_fire = "trigger ch_toggle";
 
         feedbackRule.set(false, server);

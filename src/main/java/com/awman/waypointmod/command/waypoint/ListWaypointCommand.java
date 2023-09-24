@@ -2,8 +2,8 @@ package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.WaypointMod;
 import com.awman.waypointmod.command.suggestion.WaypointAuthorSuggestionProvider;
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -33,7 +33,7 @@ public class ListWaypointCommand {
 
         // Send the waypoint list's header, using a ternary operator to set a coherent title
         context.getSource().sendMessage(Text.of("Listing " +
-                (listUserCommands ? (username + "'s") : "all") + " waypoints:"));
+                (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:"));
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
 
