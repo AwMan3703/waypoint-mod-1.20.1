@@ -2,7 +2,6 @@ package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
 import com.awman.waypointmod.util.data.PlayerData;
-import com.awman.waypointmod.util.data.WaypointData;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -12,11 +11,8 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BookmarkWaypointCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
@@ -48,7 +44,7 @@ public class BookmarkWaypointCommand {
         }
 
         List<String> bookmarks = serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks;
-        context.getSource().sendMessage(Text.of("Here's a list of your bookmarked waypoints"));
+        context.getSource().sendMessage(Text.of("Your bookmarked waypoints"));
         for (String entry : bookmarks) {
             context.getSource().sendMessage(Text.of(
                     "-> " + entry +

@@ -9,7 +9,8 @@ public class PlayerData {
 
     public boolean isDeletable() { // Wether it is safe to delete this player's data on save
         return
-                (this.bookmarks.isEmpty()) // If the player has no bookmarks saved
+                (this.bookmarks.isEmpty()) && // If the player has no bookmarks saved
+                (this.followingWaypointId.isEmpty())
                 // && ( another_condition || another_alternative )
         ;
     }
