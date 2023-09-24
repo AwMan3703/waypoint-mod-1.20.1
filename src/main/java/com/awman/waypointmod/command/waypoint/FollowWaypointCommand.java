@@ -44,56 +44,58 @@ public class FollowWaypointCommand {
         CommandManager commandManager = context.getSource().getServer().getCommandManager();
         CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
-        try {
-            // Add the waypoint's position to the player's NBT, to read it from the datapack
-            String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
-            String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
-            String command_objSet_Z = "scoreboard players set " + playerName + " fh_waypointZ " + waypointData.coordinates.getZ();
-            String command_fire = "trigger ch_toggle";
+        // Add the waypoint's position to the player's NBT, to read it from the datapack
+        String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
+        String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
+        String command_objSet_Z = "scoreboard players set " + playerName + " fh_waypointZ " + waypointData.coordinates.getZ();
+        String command_fire = "trigger ch_toggle";
 
-            feedbackRule.set(false, server);
-            commandManager.execute(dispatcher.parse(command_objSet_X, context.getSource()), command_objSet_X);
-            commandManager.execute(dispatcher.parse(command_objSet_Y, context.getSource()), command_objSet_Y);
-            commandManager.execute(dispatcher.parse(command_objSet_Z, context.getSource()), command_objSet_Z);
-            commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
-            feedbackRule.set(true, server);
+        feedbackRule.set(false, server);
+        commandManager.execute(dispatcher.parse(command_objSet_X, context.getSource()), command_objSet_X);
+        commandManager.execute(dispatcher.parse(command_objSet_Y, context.getSource()), command_objSet_Y);
+        commandManager.execute(dispatcher.parse(command_objSet_Z, context.getSource()), command_objSet_Z);
+        commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
+        feedbackRule.set(true, server);
 
-            playerData.followingWaypointId = waypointId;
+        playerData.followingWaypointId = waypointId;
 
-            context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
-            return 1;
-        } catch (Exception e) {
-            context.getSource().sendMessage(Text.of("" + e));
-        }
-        return -1;
+        context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
+
+        return 1;
     }
 
     public static int runUnfollow(CommandContext<ServerCommandSource> context) {
-        GameRules rules = context.getSource().getWorld().getGameRules();
-        GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
+        try {
+            GameRules rules = context.getSource().getWorld().getGameRules();
+            GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
 
-        MinecraftServer server = context.getSource().getServer();
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
+            MinecraftServer server = context.getSource().getServer();
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
 
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
+            ServerPlayerEntity player = context.getSource().getPlayer();
+            PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
 
-        CommandManager commandManager = context.getSource().getServer().getCommandManager();
-        CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
+            CommandManager commandManager = context.getSource().getServer().getCommandManager();
+            CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
-        String command_fire = "trigger ch_toggle";
+            String command_fire = "trigger ch_toggle";
 
-        if (!playerData.followingWaypointId.equals(null)) {
+            if ((playerData.followingWaypointId == null) || playerData.followingWaypointId.isEmpty()) {
+                context.getSource().sendMessage(Text.of("You're not following a waypoint!"));
+                return -1;
+            }
+
             feedbackRule.set(false, server);
             commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
             feedbackRule.set(true, server);
             context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
-        } else {
-            context.getSource().sendMessage(Text.of("You're not following a waypoint!"));
+
+            playerData.followingWaypointId = null;
+
+            return 1;
+        } catch (Exception e) {
+            context.getSource().sendMessage(Text.of(" ERROR: " + e));
+            return -1;
         }
-
-        playerData.followingWaypointId = null;
-
-        return 1;
     }
 }
