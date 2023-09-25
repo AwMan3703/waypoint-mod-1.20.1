@@ -1,6 +1,8 @@
 package com.awman.waypointmod.command.waypoint;
 
+import com.awman.waypointmod.WaypointMod;
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
+import com.awman.waypointmod.util.data.WaypointData;
 import com.awman.waypointmod.util.data.WaypointMap;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
@@ -26,21 +28,23 @@ public class DeleteWaypointCommand {
 
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
         WaypointMap waypointMap = serverState.waypointMap;
+        WaypointData waypointData = waypointMap.get(waypointId);
 
         if (!waypointMap.containsKey(waypointId)) {
             // If the waypoint doesn't exist:
             context.getSource().sendMessage(Text.of("Waypoint not found!"));
             return -1;
         } else if (
-                context.getSource().getName().equals(waypointMap.get(waypointId).author) // The player is the author
-                || (context.getSource().hasPermissionLevel(1)) // or The player is an op
+                !context.getSource().getName().equals(waypointData.author) && // If the player isn't the author
+                !context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel) // and the player isn't an op
         ) {
             // If the player doesn't have the necessary permissions:
             context.getSource().sendMessage(Text.of("Insufficient permissions!"));
             return -1;
         } else {
             // If no problem is detected:
-            waypointMap.remove(waypointId);
+            serverState.waypointMap.remove(waypointId);
+            serverState.markDirty();
             context.getSource().sendMessage(Text.of("Waypoint deleted!"));
             return 1;
         }

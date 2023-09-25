@@ -44,12 +44,12 @@ public class FollowWaypointCommand {
         CommandManager commandManager = context.getSource().getServer().getCommandManager();
         CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
-        // TODO: add dimension check, only follow waypoint if correct dimension
-        if (
-            false
-            // Dimension check here, return true if wrong dimension
-        ) {
-            context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString()));
+        context.getSource().sendMessage(Text.of(player.getServerWorld().getDimensionKey().getValue().toString()+" : "+waypointData.dimension.toString()+" = "+player.getServerWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString())));
+
+        // dimension check, only allow following waypoint if the player is in the correct dimension
+        if (!(player.getEntityWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString()))) {
+            context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
+            return -1;
         }
 
         // Add the waypoint's position to the player's NBT, to read it from the datapack
