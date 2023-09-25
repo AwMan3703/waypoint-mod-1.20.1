@@ -12,8 +12,8 @@ import net.minecraft.world.World;
 // I know what I'm doing (:clueless:)
 public class StateSaverAndLoader extends PersistentState {
 
-    public WaypointMap waypointMap;
-    public PlayerMap playerMap;
+    public WaypointMap waypointMap = new WaypointMap();
+    public PlayerMap playerMap = new PlayerMap();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {

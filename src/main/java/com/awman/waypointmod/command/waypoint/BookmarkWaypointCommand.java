@@ -57,15 +57,16 @@ public class BookmarkWaypointCommand {
 
     public static int runAdd(CommandContext<ServerCommandSource> context, String waypointId) {
         ServerCommandSource source = context.getSource();
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
         try {
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
+
             PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
             playerData.addBookmark(waypointId);
             source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks! Run [/waypoint bookmark view] to view them"));
             return 1;
         } catch (CommandException e) {
-            source.sendMessage(Text.of("Error adding waypoint: " + e.getMessage()));
+            source.sendMessage(Text.of("Error adding bookmark: " + e.getMessage()));
             return -1;
         }
     }
