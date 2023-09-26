@@ -14,44 +14,80 @@ import net.minecraft.text.Text;
 import java.util.List;
 
 public class BookmarkWaypointCommand {
+    // Class for the /waypoint bookmark command
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+        // Register under the /waypoint command
         dispatcher.register(CommandManager.literal("waypoint")
+                // Specify the literal "bookmark"
                 .then(CommandManager.literal("bookmark")
+
+                        // Take a literal, choosing from one of the following 3:
+                        // If the literal "view" is passed:
                         .then(CommandManager.literal("view")
+                                // Run the view function
                                 .executes(context -> runView(context)))
+
+                        // If the literal "add" is passed:
                         .then(CommandManager.literal("add")
+                                // Take a mandatory argument "waypoint_id" for the name of the waypoint to be bookmarked
                                 .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
+                                        // Send custom suggestions, choosing from the names of the available waypoints
                                         .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
+                                        // Add the chosen waypoint to the player's bookmarks
                                         .executes(context -> runAdd(context,
                                                 StringArgumentType.getString(context, "waypoint_id")))))
+
+                        // If the literal "remove" is passed:
                         .then(CommandManager.literal("remove")
+                                // Take a mandatory argument "waypoint_id" for the name of the waypoint to be bookmarked
                                 .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
+                                        // Send custom suggestions, choosing from the names of the player's bookmarks
                                         .suggests((context, builder) -> new WaypointNameSuggestionProvider().getBookmarkSuggestions(context, builder))
+                                        // Remove the chosen waypoint from the player's bookmarks
                                         .executes(context -> runRemove(context,
                                                 StringArgumentType.getString(context, "waypoint_id")))))));
     }
 
     public static int runView(CommandContext<ServerCommandSource> context) {
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
+        try {
+            // Get the serverState for managing the server's WaypointMap instance
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getServer());
 
-        if (
-            // If this player's waypoint list is empty
+            if (
+                // If this player's waypoint list is empty or absent (if absent, create a new one)
                 serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks.isEmpty()
-        ) {
-            context.getSource().sendMessage(Text.of("No bookmarked waypoints!"));
+            ) {
+                // Send a message in chat, saying there are no bookmarks
+                context.getSource().sendMessage(Text.of("No bookmarked waypoints!"));
+
+                // Return -1 (command execution failed)
+                return -1;
+            }
+
+            // If the player has bookmarks, get them in a List<String>
+            List<String> bookmarks = serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks;
+
+            // Send the list header in chat
+            context.getSource().sendMessage(Text.of("Your bookmarked waypoints:"));
+
+            // For each bookmarked waypoint:
+            for (String entry : bookmarks) {
+                // Print the waypoint's name and author to the chat
+                context.getSource().sendMessage(Text.of(
+                        "-> " + entry +
+                            ", created by @" + serverState.waypointMap.get(entry).author
+                ));
+            }
+
+            // Return 1 (command executed successfully)
+            return 1;
+        } catch (Exception e) {
+            // Print any exception to the chat
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            // Return -1 (command execution failed)
             return -1;
         }
-
-        List<String> bookmarks = serverState.playerMap.computeIfAbsent(context.getSource().getPlayer().getUuid().toString(), uuid -> new PlayerData()).bookmarks;
-        context.getSource().sendMessage(Text.of("Your bookmarked waypoints:"));
-        for (String entry : bookmarks) {
-            context.getSource().sendMessage(Text.of(
-                    "-> " + entry +
-                        ", created by @" + serverState.waypointMap.get(entry).author
-            ));
-        }
-
-        return 1;
     }
 
     public static int runAdd(CommandContext<ServerCommandSource> context, String waypointId) {
