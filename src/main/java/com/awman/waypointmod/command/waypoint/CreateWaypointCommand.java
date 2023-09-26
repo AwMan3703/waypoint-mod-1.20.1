@@ -45,7 +45,7 @@ public class CreateWaypointCommand {
                             context.getSource().getPlayer().getName().getString(),
                             position,
                             dimensionIdentifier,
-                            true) // Always public, since the feature is not yet implemented
+                            true) // Always public, since the feature is not implemented
             );
             serverState.markDirty();
 
