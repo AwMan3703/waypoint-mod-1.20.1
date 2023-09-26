@@ -14,6 +14,8 @@ public class ModRegistries {
         CommandRegistrationCallback.EVENT.register(InfoWaypointCommand::register);
         CommandRegistrationCallback.EVENT.register(FollowWaypointCommand::register);
         CommandRegistrationCallback.EVENT.register(DeleteWaypointCommand::register);
-        CommandRegistrationCallback.EVENT.register(BookmarkWaypointCommand::register);
+
+        // Available in full version
+        //CommandRegistrationCallback.EVENT.register(BookmarkWaypointCommand::register);
     }
 }
