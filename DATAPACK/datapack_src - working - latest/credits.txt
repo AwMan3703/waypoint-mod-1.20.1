@@ -1,0 +1,4 @@
+This datapack was created branching from the VanillaTweaks Coordinates HUD
+
+Credits:
+Vanilla Tweaks: https://vanillatweaks.net/
