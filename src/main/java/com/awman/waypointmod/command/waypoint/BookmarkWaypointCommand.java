@@ -92,31 +92,57 @@ public class BookmarkWaypointCommand {
 
     public static int runAdd(CommandContext<ServerCommandSource> context, String waypointId) {
         try {
+            // Get the command source
             ServerCommandSource source = context.getSource();
+
+            // Get the serverState for managing the server's WaypointMap instance
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
+            // Get the player's data
             PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
+
+            // Add the waypoint to the player's bookmarks
             playerData.addBookmark(waypointId);
+
+            // Send a message in chat, saying the bookmark has been added
             source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks! Run [/waypoint bookmark view] to view them"));
+
+            // Return 1 (command executed successfully)
             return 1;
         } catch (Exception e) {
+            // Print any exception to the chat
             context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            // Return -1 (command execution failed)
             return -1;
         }
     }
 
     public static int runRemove(CommandContext<ServerCommandSource> context, String waypointId) {
         try {
+            // Get the command source
             ServerCommandSource source = context.getSource();
+
+            // Get the serverState for managing the server's WaypointMap instance
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
+            // Get the player's data
             PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
+
+            // If the player's data does not contain the chosen waypoint, send a message in chat to inform the player
             if (!playerData.bookmarks.contains(waypointId)) source.sendMessage(Text.of("\"" + waypointId + "\" wasn't in your bookmarks!"));
+
+            // Remove the waypoint to the player's bookmarks
             playerData.deleteBookmark(waypointId);
+
+            // Send a message in chat, saying the bookmark has been removed
             source.sendMessage(Text.of("\"" + waypointId + "\" removed from your bookmarks! Run [/waypoint bookmark view] to view them"));
+
+            // Return 1 (command executed successfully)
             return 1;
         } catch (Exception e) {
+            // Print any exception to the chat
             context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            // Return -1 (command execution failed)
             return -1;
         }
     }
