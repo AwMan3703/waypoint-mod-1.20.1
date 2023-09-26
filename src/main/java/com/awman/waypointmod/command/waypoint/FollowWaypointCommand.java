@@ -17,14 +17,27 @@ import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 
 public class FollowWaypointCommand {
+    // Class for the /waypoint follow command
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+        // Register under the /waypoint command
         dispatcher.register(CommandManager.literal("waypoint")
+
+                // Take a literal, choosing from the following 2:
+                // If the literal "follow" is passed:
                 .then(CommandManager.literal("follow")
+
+                        // Take a mandatory string argument "waypoint_id" to specify which waypoint to follow
                         .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
+                                // Send custom suggestions, choosing from all the existing waypoints
                                 .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
+                                // Activate the Waypoint Follow HUD
                                 .executes(context -> runFollow(context,
                                         StringArgumentType.getString(context, "waypoint_id")))))
+
+                // If the literal "unfollow" is passed:
                 .then(CommandManager.literal("unfollow")
+                        // Deactivate the Waypoint Follow HUD
                         .executes(context -> runUnfollow(context))));
     }
 

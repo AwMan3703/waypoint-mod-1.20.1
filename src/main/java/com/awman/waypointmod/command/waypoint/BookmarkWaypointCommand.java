@@ -22,7 +22,7 @@ public class BookmarkWaypointCommand {
                 // Specify the literal "bookmark"
                 .then(CommandManager.literal("bookmark")
 
-                        // Take a literal, choosing from one of the following 3:
+                        // Take a literal, choosing from the following 3:
                         // If the literal "view" is passed:
                         .then(CommandManager.literal("view")
                                 // Run the view function
