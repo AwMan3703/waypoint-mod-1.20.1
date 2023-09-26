@@ -29,45 +29,50 @@ public class FollowWaypointCommand {
     }
 
     public static int runFollow(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
-        GameRules rules = context.getSource().getWorld().getGameRules();
-        GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
+        try {
+            GameRules rules = context.getSource().getWorld().getGameRules();
+            GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
 
-        MinecraftServer server = context.getSource().getServer();
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
+            MinecraftServer server = context.getSource().getServer();
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
 
-        ServerPlayerEntity player = context.getSource().getPlayer();
-        String playerName = player.getName().getString();
-        PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
+            ServerPlayerEntity player = context.getSource().getPlayer();
+            String playerName = player.getName().getString();
+            PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
 
-        WaypointData waypointData = serverState.waypointMap.get(waypointId);
+            WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
-        CommandManager commandManager = context.getSource().getServer().getCommandManager();
-        CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
+            CommandManager commandManager = context.getSource().getServer().getCommandManager();
+            CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
-        // dimension check, only allow following waypoint if the player is in the correct dimension
-        if (!(player.getEntityWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString()))) {
-            context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
+            // dimension check, only allow following waypoint if the player is in the correct dimension
+            if (!(player.getEntityWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString()))) {
+                context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
+                return -1;
+            }
+
+            // Add the waypoint's position to the player's NBT, to read it from the datapack
+            String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
+            String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
+            String command_objSet_Z = "scoreboard players set " + playerName + " fh_waypointZ " + waypointData.coordinates.getZ();
+            String command_fire = "trigger ch_toggle";
+
+            feedbackRule.set(false, server);
+            commandManager.execute(dispatcher.parse(command_objSet_X, context.getSource()), command_objSet_X);
+            commandManager.execute(dispatcher.parse(command_objSet_Y, context.getSource()), command_objSet_Y);
+            commandManager.execute(dispatcher.parse(command_objSet_Z, context.getSource()), command_objSet_Z);
+            commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
+            feedbackRule.set(true, server);
+
+            playerData.followingWaypointId = waypointId;
+
+            context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
+
+            return 1;
+        } catch (Exception e) {
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
             return -1;
         }
-
-        // Add the waypoint's position to the player's NBT, to read it from the datapack
-        String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
-        String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
-        String command_objSet_Z = "scoreboard players set " + playerName + " fh_waypointZ " + waypointData.coordinates.getZ();
-        String command_fire = "trigger ch_toggle";
-
-        feedbackRule.set(false, server);
-        commandManager.execute(dispatcher.parse(command_objSet_X, context.getSource()), command_objSet_X);
-        commandManager.execute(dispatcher.parse(command_objSet_Y, context.getSource()), command_objSet_Y);
-        commandManager.execute(dispatcher.parse(command_objSet_Z, context.getSource()), command_objSet_Z);
-        commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
-        feedbackRule.set(true, server);
-
-        playerData.followingWaypointId = waypointId;
-
-        context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
-
-        return 1;
     }
 
     public static int runUnfollow(CommandContext<ServerCommandSource> context) {
@@ -100,7 +105,7 @@ public class FollowWaypointCommand {
 
             return 1;
         } catch (Exception e) {
-            context.getSource().sendMessage(Text.of(" ERROR: " + e));
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
             return -1;
         }
     }

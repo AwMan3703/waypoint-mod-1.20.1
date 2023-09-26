@@ -1,8 +1,8 @@
 package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -23,27 +23,32 @@ public class InfoWaypointCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
+            try {
+                StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
 
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
+                if (!serverState.waypointMap.containsKey(waypointId)) {
 
-        if (!serverState.waypointMap.containsKey(waypointId)) {
+                    context.getSource().sendMessage(Text.of("Waypoint not found!"));
 
-            context.getSource().sendMessage(Text.of("Waypoint not found!"));
+                    return -1;
+                } else {
 
-            return -1;
-        } else {
+                    WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
-            WaypointData waypointData = serverState.waypointMap.get(waypointId);
+                    context.getSource().sendMessage(Text.of("Waypoint data:"));
+                    context.getSource().sendMessage(Text.of(
+                            "-> \"" + waypointId + "\", created by " +
+                                    "@" + waypointData.author + " (" +
+                                    (waypointData.isPublic() ? "public" : "private") + "): [" +
+                                    waypointData.coordinates.toShortString() + " in " +
+                                    waypointData.dimension.toString() + "]"));
 
-            context.getSource().sendMessage(Text.of("Waypoint data:"));
-            context.getSource().sendMessage(Text.of(
-                    "-> \"" + waypointId + "\", created by " +
-                            "@" + waypointData.author + " (" +
-                            (waypointData.isPublic() ? "public" : "private") + "): [" +
-                            waypointData.coordinates.toShortString() + " in " +
-                            waypointData.dimension.toString() + "]"));
-
-            return 1;
-        }
+                    return 1;
+                }
+            } catch (Exception e) {
+                context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+                return -1;
+            }
     }
 }
+

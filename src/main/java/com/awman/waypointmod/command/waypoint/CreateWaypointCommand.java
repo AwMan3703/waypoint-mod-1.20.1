@@ -1,7 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
@@ -36,21 +36,25 @@ public class CreateWaypointCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, String dimensionIdentifier) throws CommandSyntaxException {
+        try {
+            context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
-        context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
+            serverState.waypointMap.insert(waypointId,
+                    new WaypointData(
+                            context.getSource().getPlayer().getName().getString(),
+                            position,
+                            dimensionIdentifier,
+                            true) // Always public, since the feature is not yet implemented
+            );
+            serverState.markDirty();
 
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
-        serverState.waypointMap.insert(waypointId,
-                new WaypointData(
-                        context.getSource().getPlayer().getName().getString(),
-                        position,
-                        dimensionIdentifier,
-                        true) // Always public, since the feature is not yet implemented
-        );
-        serverState.markDirty();
+            context.getSource().sendMessage(Text.of("Waypoint created!"));
 
-        context.getSource().sendMessage(Text.of("Waypoint created!"));
-
-        return 1;
+            return 1;
+        } catch (Exception e) {
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            return -1;
+        }
     }
 }

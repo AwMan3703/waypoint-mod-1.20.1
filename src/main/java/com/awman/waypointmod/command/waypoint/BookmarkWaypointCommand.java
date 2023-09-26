@@ -6,7 +6,6 @@ import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -56,33 +55,32 @@ public class BookmarkWaypointCommand {
     }
 
     public static int runAdd(CommandContext<ServerCommandSource> context, String waypointId) {
-        ServerCommandSource source = context.getSource();
-
         try {
+            ServerCommandSource source = context.getSource();
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
             PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
             playerData.addBookmark(waypointId);
             source.sendMessage(Text.of("\"" + waypointId + "\" added to your bookmarks! Run [/waypoint bookmark view] to view them"));
             return 1;
-        } catch (CommandException e) {
-            source.sendMessage(Text.of("Error adding bookmark: " + e.getMessage()));
+        } catch (Exception e) {
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
             return -1;
         }
     }
 
     public static int runRemove(CommandContext<ServerCommandSource> context, String waypointId) {
-        ServerCommandSource source = context.getSource();
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
-
         try {
+            ServerCommandSource source = context.getSource();
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
+
             PlayerData playerData = serverState.playerMap.computeIfAbsent(source.getPlayer().getUuid().toString(), uuid -> new PlayerData());
             if (!playerData.bookmarks.contains(waypointId)) source.sendMessage(Text.of("\"" + waypointId + "\" wasn't in your bookmarks!"));
             playerData.deleteBookmark(waypointId);
             source.sendMessage(Text.of("\"" + waypointId + "\" removed from your bookmarks! Run [/waypoint bookmark view] to view them"));
             return 1;
-        } catch (CommandException e) {
-            source.sendMessage(Text.of("Error removing waypoint: " + e.getMessage()));
+        } catch (Exception e) {
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
             return -1;
         }
     }

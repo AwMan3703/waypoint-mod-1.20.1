@@ -25,28 +25,32 @@ public class DeleteWaypointCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
+        try {
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
+            WaypointMap waypointMap = serverState.waypointMap;
+            WaypointData waypointData = waypointMap.get(waypointId);
 
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
-        WaypointMap waypointMap = serverState.waypointMap;
-        WaypointData waypointData = waypointMap.get(waypointId);
-
-        if (!waypointMap.containsKey(waypointId)) {
-            // If the waypoint doesn't exist:
-            context.getSource().sendMessage(Text.of("Waypoint not found!"));
+            if (!waypointMap.containsKey(waypointId)) {
+                // If the waypoint doesn't exist:
+                context.getSource().sendMessage(Text.of("Waypoint not found!"));
+                return -1;
+            } else if (
+                    !context.getSource().getName().equals(waypointData.author) && // If the player isn't the author
+                    !context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel) // and the player isn't an op
+            ) {
+                // If the player doesn't have the necessary permissions:
+                context.getSource().sendMessage(Text.of("Insufficient permissions!"));
+                return -1;
+            } else {
+                // If no problem is detected:
+                serverState.waypointMap.remove(waypointId);
+                serverState.markDirty();
+                context.getSource().sendMessage(Text.of("Waypoint deleted!"));
+                return 1;
+            }
+        } catch (Exception e) {
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
             return -1;
-        } else if (
-                !context.getSource().getName().equals(waypointData.author) && // If the player isn't the author
-                !context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel) // and the player isn't an op
-        ) {
-            // If the player doesn't have the necessary permissions:
-            context.getSource().sendMessage(Text.of("Insufficient permissions!"));
-            return -1;
-        } else {
-            // If no problem is detected:
-            serverState.waypointMap.remove(waypointId);
-            serverState.markDirty();
-            context.getSource().sendMessage(Text.of("Waypoint deleted!"));
-            return 1;
         }
     }
 }

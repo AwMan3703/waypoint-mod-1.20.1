@@ -28,34 +28,38 @@ public class ListWaypointCommand {
     }
 
     public static int run(CommandContext<ServerCommandSource> context, @Nullable String username) throws CommandSyntaxException {
+        try {
+            final boolean listUserCommands = username != null; // Wether we want to list commands created by a specific user, or all of them
 
-        final boolean listUserCommands = username != null; // Wether we want to list commands created by a specific user, or all of them
+            // Send the waypoint list's header, using a ternary operator to set a coherent title
+            context.getSource().sendMessage(Text.of("Listing " +
+                    (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:"));
 
-        // Send the waypoint list's header, using a ternary operator to set a coherent title
-        context.getSource().sendMessage(Text.of("Listing " +
-                (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:"));
+            StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
 
-        StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
+            if (serverState.waypointMap.isEmpty()) {
+                context.getSource().sendMessage(Text.of("[No waypoints available]"));
+            } else {
+                for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
+                    String waypointName = entry.getKey();
+                    WaypointData waypointData = entry.getValue();
 
-        if (serverState.waypointMap.isEmpty()) {
-            context.getSource().sendMessage(Text.of("[No waypoints available]"));
-        } else {
-            for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
-                String waypointName = entry.getKey();
-                WaypointData waypointData = entry.getValue();
-
-                if (
-                    // If the waypoint is public OR the player is an op, AND
-                    (waypointData.isPublic() || context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) &&
-                    // If the waypoint is by the user we're searching for, OR we're listing all waypoints
-                    (!listUserCommands || (listUserCommands && waypointData.author.equals(username)))
-                ) {
-                    context.getSource().sendMessage(Text.of(
-                            "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));
+                    if (
+                        // If the waypoint is public OR the player is an op, AND
+                        (waypointData.isPublic() || context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel)) &&
+                        // If the waypoint is by the user we're searching for, OR we're listing all waypoints
+                        (!listUserCommands || (listUserCommands && waypointData.author.equals(username)))
+                    ) {
+                        context.getSource().sendMessage(Text.of(
+                                "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));
+                    }
                 }
             }
-        }
 
-        return 1;
+            return 1;
+        } catch (Exception e) {
+            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            return -1;
+        }
     }
 }
