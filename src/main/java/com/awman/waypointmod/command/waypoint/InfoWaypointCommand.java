@@ -41,9 +41,7 @@ public class InfoWaypointCommand {
                 context.getSource().sendMessage(Text.of("Waypoint not found!"));
                 // Return -1 (command execution failed)
                 return -1;
-            } else {
-                // If the server's WaypointMap instance DOES contain the chosen waypoint:
-
+            } else { // If the server's WaypointMap instance DOES contain the chosen waypoint:
                 // Get the waypoint's data
                 WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
