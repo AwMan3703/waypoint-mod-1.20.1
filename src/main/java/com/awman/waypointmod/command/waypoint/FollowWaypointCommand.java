@@ -44,8 +44,6 @@ public class FollowWaypointCommand {
         CommandManager commandManager = context.getSource().getServer().getCommandManager();
         CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
-        context.getSource().sendMessage(Text.of(player.getServerWorld().getDimensionKey().getValue().toString()+" : "+waypointData.dimension.toString()+" = "+player.getServerWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString())));
-
         // dimension check, only allow following waypoint if the player is in the correct dimension
         if (!(player.getEntityWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString()))) {
             context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
