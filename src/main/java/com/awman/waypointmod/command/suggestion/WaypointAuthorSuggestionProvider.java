@@ -1,7 +1,7 @@
 package com.awman.waypointmod.command.suggestion;
 
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -15,10 +15,13 @@ import java.util.concurrent.CompletableFuture;
 
 public class WaypointAuthorSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
 
+    // getSuggestions suggests all the names of players who have created waypoints (authors)
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
+        // Shorthand for the command source
         ServerCommandSource source = context.getSource();
 
+        // Get the serverState for managing the server's WaypointMap instance
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
         // Create the authors hashmap, to store usernames and the # of waypoints they have created
@@ -46,7 +49,7 @@ public class WaypointAuthorSuggestionProvider implements SuggestionProvider<Serv
             );
         }
 
-        // Return (to) the future
+        // Return the suggestions
         return CompletableFuture.completedFuture(builder.build());
     }
 }

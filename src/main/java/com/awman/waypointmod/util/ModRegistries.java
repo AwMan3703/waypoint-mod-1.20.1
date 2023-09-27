@@ -13,7 +13,7 @@ public class ModRegistries {
     }
 
     private static void registerCommands() {
-        // For each command, call it's register() method
+        // For each command, register it with it's register() method
         CommandRegistrationCallback.EVENT.register(CreateWaypointCommand::register);
         CommandRegistrationCallback.EVENT.register(ListWaypointCommand::register);
         CommandRegistrationCallback.EVENT.register(InfoWaypointCommand::register);

@@ -50,7 +50,7 @@ public class DeleteWaypointCommand {
                 context.getSource().sendMessage(Text.of("Waypoint not found!"));
                 // Return -1 (command execution failed)
                 return -1;
-            } else if ( // If the waypointMap DOES contain the chosen waypoint, check if they DO NOT have enough permissions
+            } else if ( // If the waypointMap DOES contain the chosen waypoint, check if the player DOESN'T have enough permissions
                     !context.getSource().getName().equals(waypointData.author) && // Either the player isn't the author
                     !context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel) // Or the player isn't an op
             ) {

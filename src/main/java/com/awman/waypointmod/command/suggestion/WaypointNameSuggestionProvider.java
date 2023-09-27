@@ -1,8 +1,8 @@
 package com.awman.waypointmod.command.suggestion;
 
 import com.awman.waypointmod.WaypointMod;
-import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.awman.waypointmod.util.data.WaypointData;
+import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
@@ -15,11 +15,15 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class WaypointNameSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
+    // This class provides waypoint name suggestions while typing a command
 
+    // getSuggestions suggests all the available waypoint names
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
+        // Shorthand for the command source
         ServerCommandSource source = context.getSource();
 
+        // Get the serverState for managing the server's WaypointMap instance
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
         // Create the waypoints hashmap, to store waypoint names
@@ -56,9 +60,12 @@ public class WaypointNameSuggestionProvider implements SuggestionProvider<Server
         return CompletableFuture.completedFuture(builder.build());
     }
 
+    // getBookmarkSuggestions suggests the waypoints from a player's bookmarks
     public CompletableFuture<Suggestions> getBookmarkSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
+        // Shorthand for the command source
         ServerCommandSource source = context.getSource();
 
+        // Get the serverState for managing the server's WaypointMap instance
         StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(source.getServer());
 
         // Create the waypoints hashmap, to store waypoint names

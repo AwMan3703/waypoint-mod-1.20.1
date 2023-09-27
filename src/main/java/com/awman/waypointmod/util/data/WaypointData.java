@@ -5,8 +5,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class WaypointData {
+    // This class holds information about a waypoint
 
-    // constants for nbt storage keys
+    // Nbt storage keys
     private static final String AUTHOR_NBT_KEY = "author";
     private static final String POSITION_NBT_KEY = "position";
     private static final String DIMENSION_NBT_KEY = "dimension";
@@ -18,9 +19,9 @@ public class WaypointData {
 
     // The coordinates of this waypoint
     public BlockPos coordinates;
-    public boolean isCoords(BlockPos f) { return this.coordinates.equals(f); }
+    public boolean hasCoords(BlockPos f) { return this.coordinates.equals(f); }
 
-    // The dimension this waypoint applies to
+    // The dimension this waypoint is in
     public Identifier dimension;
     public boolean isDimension(Identifier f) { return this.dimension.equals(f); }
 
@@ -28,13 +29,15 @@ public class WaypointData {
     private final Boolean visibility; // True = public ; False = private
     public boolean isPublic() { return this.visibility.equals(true); }
 
+    // Constructor
     public WaypointData(String author, BlockPos position, String dimension, Boolean isPublic) {
         this.author = author;
         this.coordinates = position;
-        this.dimension = new Identifier(dimension);
+        this.dimension = new Identifier(dimension); // Get the dimension identifier from the dimension's registry key
         this.visibility = isPublic;
     }
 
+    // fromNbt is used to create a WaypointData instance from NBT data
     public static WaypointData fromNbt(NbtCompound nbt) {
         // Extract the compound data, adding an if(null) condition for backwards compatibility
         String author = nbt.getString(WaypointData.AUTHOR_NBT_KEY);
@@ -54,6 +57,7 @@ public class WaypointData {
         return new WaypointData(author, position, dimension, visibility);
     }
 
+    // toNbt is used to convert a WaypointMap instance's data to NBT
     public NbtCompound toNbt() {
         // Create an empty Nbt Compound
         NbtCompound nbt = new NbtCompound();

@@ -9,27 +9,34 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class WaypointMap extends HashMap<String, WaypointData> {
+    // This class is used for keeping track of this server's waypoints
 
+    // The name under which the data will be saved statically
     public static final String NBT_STORAGE_KEY = "waypointMap";
 
-    // Add a new entry
+    // Method to add a new entry
     public void insert(String key, WaypointData content) {
         this.put(key, content);
     }
 
-    // Find the keys of entries based on a filter function
+    // Method to find keys of entries based on a filter function
     public List<Entry<String, WaypointData>> find(Function<Entry<String, WaypointData>, Boolean> f) {
+        // Initialize the results list
         List<Map.Entry<String, WaypointData>> results = Arrays.asList();
 
+        // For each waypoint in this map:
         for (Map.Entry<String, WaypointData> entry : this.entrySet()) {
+            // If the waypoint satisfies the filter, add it to the results
             if (f.apply(entry)) results.add(entry);
         }
 
+        // Return the results list
         return results;
     }
 
+    // fromNbt is used to create a WaypointMap instance from NBT data
     public static WaypointMap fromNbt(NbtCompound nbt) {
-        // A conversion from Hashmap to NbtCompound is needed:
+        // A conversion from NbtCompound to WaypointMap is needed:
 
         // Create an empty WaypointMap
         final WaypointMap waypointMap = new WaypointMap();
@@ -47,11 +54,13 @@ public class WaypointMap extends HashMap<String, WaypointData> {
             waypointMap.put(waypointName, waypointData);
         }
 
+        // Return the WaypointMap instance
         return waypointMap;
     }
 
+    // toNbt is used to convert a WaypointMap instance's data to NBT
     public NbtCompound toNbt() {
-        // A conversion from Hashmap to NbtCompound is needed:
+        // A conversion from WaypointMap to NbtCompound is needed:
 
         // Create an empty compound
         final NbtCompound nbt = new NbtCompound();
