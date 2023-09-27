@@ -31,59 +31,92 @@ public class FollowWaypointCommand {
                         .then(CommandManager.argument("waypoint_id", StringArgumentType.string())
                                 // Send custom suggestions, choosing from all the existing waypoints
                                 .suggests((context, builder) -> new WaypointNameSuggestionProvider().getSuggestions(context, builder))
-                                // Activate the Waypoint Follow HUD
+                                // Activate the Waypoint-Follower HUD
                                 .executes(context -> runFollow(context,
                                         StringArgumentType.getString(context, "waypoint_id")))))
 
                 // If the literal "unfollow" is passed:
                 .then(CommandManager.literal("unfollow")
-                        // Deactivate the Waypoint Follow HUD
+                        // Deactivate the Waypoint-Follower HUD
                         .executes(context -> runUnfollow(context))));
     }
 
     public static int runFollow(CommandContext<ServerCommandSource> context, String waypointId) throws CommandSyntaxException {
+        // OOF this took so long
         try {
+            // Get access to the world's gamerules
             GameRules rules = context.getSource().getWorld().getGameRules();
+
+            // Get access to the sendCommandFeedback rule
             GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
 
+            // Get the current server
             MinecraftServer server = context.getSource().getServer();
+
+            // Get the serverState for managing the server's PlayerMap instance
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
 
+            // Get the player who sent the follow command
             ServerPlayerEntity player = context.getSource().getPlayer();
+
+            // Get that player's name
             String playerName = player.getName().getString();
+
+            // Get that player's data
             PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
 
+            // Get the server's WaypointMap instance
             WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
+            // Get the server's command manager
             CommandManager commandManager = context.getSource().getServer().getCommandManager();
+
+            // Get the command manager's dispatcher
             CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
             // dimension check, only allow following waypoint if the player is in the correct dimension
             if (!(player.getEntityWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString()))) {
+                // If not, inform them via a chat message
                 context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
+                // Return -1 (command execution failed)
                 return -1;
             }
+            // Otherwise, if the player IS in the correct dimension, continue
 
-            // Add the waypoint's position to the player's NBT, to read it from the datapack
+            // We need to add the waypoint's position to the player's scoreboard, in order to read it from the datapack
+            // and display the correct information in the HUD.
+            // This can be done by first adding the data using the /scoreboard command, and then activating the HUD using
+            // the /trigger command:
+
+            // Create 3 commands to add the waypoint's X, Y and Z coordinates to this specific player's scoreboard
             String command_objSet_X = "scoreboard players set " + playerName + " fh_waypointX " + waypointData.coordinates.getX();
             String command_objSet_Y = "scoreboard players set " + playerName + " fh_waypointY " + waypointData.coordinates.getY();
             String command_objSet_Z = "scoreboard players set " + playerName + " fh_waypointZ " + waypointData.coordinates.getZ();
+            // Then create a command to /trigger the HUD
             String command_fire = "trigger ch_toggle";
 
+            // Disable the sendCommandFeedback rule
             feedbackRule.set(false, server);
+            // Send the commands we created
             commandManager.execute(dispatcher.parse(command_objSet_X, context.getSource()), command_objSet_X);
             commandManager.execute(dispatcher.parse(command_objSet_Y, context.getSource()), command_objSet_Y);
             commandManager.execute(dispatcher.parse(command_objSet_Z, context.getSource()), command_objSet_Z);
             commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
+            // Re-enable the sendCommandFeedback rule
             feedbackRule.set(true, server);
 
+            // Update this player's followingWaypointId (useful for remembering which waypoint they were following)
             playerData.followingWaypointId = waypointId;
 
+            // Send a message in chat, confirming the start of a following session
             context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
 
+            // Return 1 (command executed successfully)
             return 1;
         } catch (Exception e) {
+            // Print any exception to the chat
             context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            // Return -1 (command execution failed)
             return -1;
         }
     }
