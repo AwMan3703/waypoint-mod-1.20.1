@@ -2,7 +2,7 @@
 *Created for a replit.com bounty (commissioned by @DillonB07)*
 
 ### Info
-- for Minecraft 1.20.1
+- Minecraft 1.20.1
 - Fabric mod loader
 - Server-side
 
