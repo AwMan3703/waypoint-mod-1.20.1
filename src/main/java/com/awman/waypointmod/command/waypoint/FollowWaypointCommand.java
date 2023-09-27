@@ -108,7 +108,7 @@ public class FollowWaypointCommand {
             // Update this player's followingWaypointId (useful for remembering which waypoint they were following)
             playerData.followingWaypointId = waypointId;
 
-            // Send a message in chat, confirming the start of a following session
+            // Send a message in chat, confirming the start of a new following session
             context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
 
             // Return 1 (command executed successfully)
@@ -123,35 +123,60 @@ public class FollowWaypointCommand {
 
     public static int runUnfollow(CommandContext<ServerCommandSource> context) {
         try {
+            // Get access to the world's gamerules
             GameRules rules = context.getSource().getWorld().getGameRules();
+
+            // Get access to the sendCommandFeedback rule
             GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
 
+            // Get the current server
             MinecraftServer server = context.getSource().getServer();
+
+            // Get the serverState for managing the server's PlayerMap instance
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
 
+            // Get the player who sent the follow command
             ServerPlayerEntity player = context.getSource().getPlayer();
+
+            // Get that player's data
             PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
 
+            // Get the server's command manager
             CommandManager commandManager = context.getSource().getServer().getCommandManager();
+
+            // Get the command manager's dispatcher
             CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
+            // Then create a command to /trigger the HUD
             String command_fire = "trigger ch_toggle";
 
+            // If the player IS actually following a waypoint (i.e. followingWaypointId is not null/empty)
             if ((playerData.followingWaypointId == null) || playerData.followingWaypointId.isEmpty()) {
+                // Send a message in chat to inform the player
                 context.getSource().sendMessage(Text.of("You're not following a waypoint!"));
+                // Return -1 (command execution failed)
                 return -1;
             }
 
+            // Disable the sendCommandFeedback rule
             feedbackRule.set(false, server);
+            // Send the trigger command to disable the HUD
             commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
+            // Re-enable the sendCommandFeedback rule
             feedbackRule.set(true, server);
+
+            // Send a message in chat, confirming the end of the following session
             context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
 
+            // Clear this player's followingWaypointId
             playerData.followingWaypointId = null;
 
+            // Return 1 (command executed successfully)
             return 1;
         } catch (Exception e) {
+            // Print any exception to the chat
             context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            // Return -1 (command execution failed)
             return -1;
         }
     }
