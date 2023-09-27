@@ -4,7 +4,7 @@
 			"item": "minecraft:compass"
 		},
 		"title": "Follow Waypoint HUD",
-		"description": ["",{"text":"Allows players to follow a waypoint.\n","color":"gold"},{"text":"Enter ","color":"green"},{"text":"/trigger ch_toggle","color":"yellow"},{"text":" to follow.","color":"gold"}],
+		"description": ["",{"text":"Allows players to follow a waypoint.\n","color":"gold"},{"text":"Enter ","color":"green"},{"text":"/waypoint follow <your_waypoint>","color":"yellow"},{"text":" to follow.","color":"gold"}],
 		"show_toast": false,
 		"announce_to_chat": false
 	},
