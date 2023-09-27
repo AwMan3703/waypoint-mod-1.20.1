@@ -6,12 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerData {
+    // This class holds information about a player
 
-    public boolean isDeletable() { // Wether it is safe to delete this player's data on save
+    // Method to check if this item can be safely deleted (i.e. is not storing any information)
+    // This is done to avoid taking up space in the .dat files without actually holding any data
+    public boolean isDeletable() {
         return
-                (this.bookmarks.isEmpty()) && // If the player has no bookmarks saved
-                (this.followingWaypointId.isEmpty()) // If the player isn't following any waypoint
-                // && ( another_condition || another_alternative )
+                (this.bookmarks.isEmpty()) // It can be deleted if the player has no bookmarks saved
+                && (this.followingWaypointId.isEmpty()) // AND the player isn't following any waypoint
         ;
     }
 
@@ -32,23 +34,31 @@ public class PlayerData {
     // The waypoint this player is following (if any)
     public String followingWaypointId;
 
+    // Constructor
     public PlayerData() {
         this.bookmarks = new ArrayList<>();
         this.followingWaypointId = "";
     }
 
+    // fromNbt is used to create a PlayerData instance from NBT data
     public static PlayerData fromNbt(NbtCompound nbt) {
-        // Extract the compound data, and create a bookmark map
+        // Extract the compound data, adding an if(null) condition for backwards compatibility
         List<String> bookmarkData = nbt.getCompound(PlayerData.BOOKMARKS_NBT_KEY).getKeys().stream().toList();
+        if (bookmarkData.equals(null)) bookmarkData = new ArrayList<>();
 
         String followingWaypointId = nbt.getString(PlayerData.FOLLOWING_WAYPOINT_ID_NBT_KEY);
+        // No if(null) here, as this may need to be null to work correctly
 
-        // Return a PlayerData object
+        // Put the data in a PlayerData object
         PlayerData playerData = new PlayerData();
         playerData.bookmarks = bookmarkData;
         playerData.followingWaypointId = followingWaypointId;
+
+        // Return it
         return playerData;
     }
+
+    // toNbt is used to convert a PlayerData instance's data to NBT
     public NbtCompound toNbt() {
         // Create an empty Nbt Compound
         NbtCompound nbt = new NbtCompound();
