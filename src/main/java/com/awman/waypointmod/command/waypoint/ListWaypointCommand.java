@@ -2,6 +2,7 @@ package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.WaypointMod;
 import com.awman.waypointmod.command.suggestion.WaypointAuthorSuggestionProvider;
+import com.awman.waypointmod.util.ChatUI;
 import com.awman.waypointmod.util.data.WaypointData;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
@@ -83,7 +84,8 @@ public class ListWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
+
             // Return -1 (command execution failed)
             return -1;
         }

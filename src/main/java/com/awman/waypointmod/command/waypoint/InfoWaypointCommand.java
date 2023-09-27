@@ -1,6 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
+import com.awman.waypointmod.util.ChatUI;
 import com.awman.waypointmod.util.data.WaypointData;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
@@ -38,7 +39,7 @@ public class InfoWaypointCommand {
             // If the server's WaypointMap instance does not contain the chosen waypoint:
             if (!serverState.waypointMap.containsKey(waypointId)) {
                 // Inform the player via a chat message
-                context.getSource().sendMessage(Text.of("Waypoint not found!"));
+                ChatUI.sendMsg(context.getSource(), ChatUI.errorText("That waypoint doesn't exist!", "\"" + waypointId + "\" doesn't exist!"));
                 // Return -1 (command execution failed)
                 return -1;
             } else { // If the server's WaypointMap instance DOES contain the chosen waypoint:
@@ -61,7 +62,7 @@ public class InfoWaypointCommand {
             }
         } catch (Exception e) {
             // Print any exception to the chat
-            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
             // Return -1 (command execution failed)
             return -1;
         }

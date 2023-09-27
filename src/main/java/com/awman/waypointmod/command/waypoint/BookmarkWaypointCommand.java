@@ -1,6 +1,7 @@
 package com.awman.waypointmod.command.waypoint;
 
 import com.awman.waypointmod.command.suggestion.WaypointNameSuggestionProvider;
+import com.awman.waypointmod.util.ChatUI;
 import com.awman.waypointmod.util.data.PlayerData;
 import com.awman.waypointmod.util.storage.StateSaverAndLoader;
 import com.mojang.brigadier.CommandDispatcher;
@@ -84,7 +85,8 @@ public class BookmarkWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
+
             // Return -1 (command execution failed)
             return -1;
         }
@@ -111,7 +113,8 @@ public class BookmarkWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
+
             // Return -1 (command execution failed)
             return -1;
         }
@@ -141,7 +144,8 @@ public class BookmarkWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            context.getSource().sendMessage(Text.of("WPM ERROR: " + e));
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
+
             // Return -1 (command execution failed)
             return -1;
         }
