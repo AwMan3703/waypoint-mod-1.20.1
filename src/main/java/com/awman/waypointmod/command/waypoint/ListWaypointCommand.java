@@ -92,7 +92,7 @@ public class ListWaypointCommand {
                                         isOdd ? ChatUI.color_Main : ChatUI.color_Secondary).append(
                                 ChatUI.colored(waypointName,
                                         ChatUI.color_Main)).append(
-                                ChatUI.colored((listUserCommands ? "" : ("\", created by @" + waypointData.author)),
+                                ChatUI.colored("\"" + (listUserCommands ? "" : (", created by @" + waypointData.author)),
                                         isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg)).append(
                                 ChatUI.styledText(" [+]", Formatting.GREEN,
                                         HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to follow")),
