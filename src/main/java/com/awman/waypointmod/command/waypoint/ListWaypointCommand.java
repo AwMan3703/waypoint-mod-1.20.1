@@ -96,7 +96,10 @@ public class ListWaypointCommand {
                                         isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg)).append(
                                 ChatUI.styledText(" [+]", Formatting.GREEN,
                                         HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to follow")),
-                                        new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointName)))
+                                        new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointName))).append(
+                                ChatUI.styledText(" [i]", Formatting.BLUE,
+                                        HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to get info")),
+                                        new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint info " + waypointName)))
                         );
                         /*context.getSource().sendMessage(Text.of(
                                 "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));*/
