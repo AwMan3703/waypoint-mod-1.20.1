@@ -78,7 +78,10 @@ public class FollowWaypointCommand {
             // dimension check, only allow following waypoint if the player is in the correct dimension
             if (!(player.getEntityWorld().getDimensionKey().getValue().toString().equals(waypointData.dimension.toString()))) {
                 // If not, inform them via a chat message
-                context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("Wrong dimension! Go to " + waypointData.dimension.toString(), ChatUI.color_Secondary));
+                //context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
                 // Return -1 (command execution failed)
                 return -1;
             }
