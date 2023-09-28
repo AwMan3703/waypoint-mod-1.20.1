@@ -98,7 +98,13 @@ public class BookmarkWaypointCommand {
                                 isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg).append(
                         ChatUI.colored(entry, ChatUI.color_Main)).append(
                         ChatUI.colored("\", by @" + serverState.waypointMap.get(entry).author,
-                                isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg))
+                                isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg)).append(
+                        ChatUI.styledText(" [+]", Formatting.GREEN,
+                                HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to follow")),
+                                new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + entry))).append(
+                        ChatUI.styledText(" [i]", Formatting.BLUE,
+                                HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to get info")),
+                                new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint info " + entry)))
                 );
                 /*context.getSource().sendMessage(Text.of(
                         "-> " + entry +
