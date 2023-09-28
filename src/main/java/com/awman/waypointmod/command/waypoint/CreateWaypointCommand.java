@@ -12,7 +12,6 @@ import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 public class CreateWaypointCommand {
@@ -60,8 +59,21 @@ public class CreateWaypointCommand {
 
     public static int run(CommandContext<ServerCommandSource> context, String waypointId, BlockPos position, String dimensionIdentifier) throws CommandSyntaxException {
         try {
+            // Send a spacer
+            ChatUI.sendSpacer(context.getSource());
+
             // Send a message in chat, saying the waypoint is being created
-            context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
+            ChatUI.sendMsg(
+                    context.getSource(),
+                    ChatUI.colored("Creating waypoint [", ChatUI.color_Bg).append(
+                    ChatUI.colored(waypointId, ChatUI.color_Secondary)).append(
+                    ChatUI.colored("] at ", ChatUI.color_Bg)).append(
+                    ChatUI.colored(position.toShortString(), ChatUI.color_Secondary)).append(
+                    ChatUI.colored(" in dimension \"", ChatUI.color_Bg)).append(
+                    ChatUI.colored(dimensionIdentifier, ChatUI.color_Secondary)).append(
+                    ChatUI.colored("\"...", ChatUI.color_Bg))
+            );
+            //context.getSource().sendMessage(Text.of("Creating waypoint [" + waypointId + "] at " + position.toShortString() + " in dimension \"" + dimensionIdentifier + "\"..."));
 
             // Get the serverState for managing the server's WaypointMap instance
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
@@ -80,7 +92,14 @@ public class CreateWaypointCommand {
             serverState.markDirty();
 
             // Send a message in chat, saying the waypoint has been created
-            context.getSource().sendMessage(Text.of("Waypoint created!"));
+            ChatUI.sendMsg(
+                    context.getSource(),
+                    ChatUI.colored("Waypoint created!", ChatUI.color_Positive)
+            );
+            //context.getSource().sendMessage(Text.of("Waypoint created!"));
+
+            // Send another spacer
+            ChatUI.sendSpacer(context.getSource());
 
             // Return 1 (command executed successfully)
             return 1;

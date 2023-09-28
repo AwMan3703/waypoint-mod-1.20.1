@@ -49,11 +49,14 @@ public class InfoWaypointCommand {
                 // Get the waypoint's data
                 WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
-                // Send the header
+                // Send a spacer
                 ChatUI.sendSpacer(context.getSource());
+
+                // Send the header
                 ChatUI.sendMsg(
                         context.getSource(),
-                        ChatUI.colored("Waypoint data:", ChatUI.color_Header));
+                        ChatUI.colored("Waypoint data:", ChatUI.color_Header)
+                );
                 //context.getSource().sendMessage(Text.of("Waypoint data:"));
 
                 // Send the waypoint's info (name, author, visibility (not implemented), coordinates and dimension)
@@ -63,20 +66,25 @@ public class InfoWaypointCommand {
                         ChatUI.colored("\"" + waypointId + "\"", ChatUI.color_Main)).append(
                         ChatUI.colored(", by ", ChatUI.color_Bg)).append(
                         ChatUI.colored("@" + waypointData.author, ChatUI.color_Secondary)).append(
-                        ChatUI.colored(" (" + (waypointData.isPublic() ? "public" : "private") + "): ", ChatUI.color_Bg)).append(
-                        ChatUI.colored(waypointData.coordinates.toShortString(), ChatUI.color_Main)).append(
+                        ChatUI.colored(" (" + (waypointData.isPublic() ? "public" : "private") + "): ", ChatUI.color_Bg)));
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored(waypointData.coordinates.toShortString(), ChatUI.color_Main).append(
                         ChatUI.colored(" in ", ChatUI.color_Secondary)).append(
                         ChatUI.colored(waypointData.dimension.toString(), ChatUI.color_Main)).append(
                         ChatUI.styledText(" [+]", Formatting.GREEN,
                                 HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to follow")),
-                                new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointId))));
-                ChatUI.sendSpacer(context.getSource());
+                                new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointId)))
+                );
                 /*context.getSource().sendMessage(Text.of(
                         "-> \"" + waypointId + "\", created by " +
                                 "@" + waypointData.author + " (" +
                                 (waypointData.isPublic() ? "public" : "private") + "): [" +
                                 waypointData.coordinates.toShortString() + " in " +
                                 waypointData.dimension.toString() + "]"));*/
+
+                // Send another spacer
+                ChatUI.sendSpacer(context.getSource());
 
                 // Return 1 (command executed successfully)
                 return 1;

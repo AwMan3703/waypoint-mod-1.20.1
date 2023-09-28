@@ -14,7 +14,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.world.GameRules;
 
 public class FollowWaypointCommand {
@@ -80,7 +79,8 @@ public class FollowWaypointCommand {
                 // If not, inform them via a chat message
                 ChatUI.sendMsg(
                         context.getSource(),
-                        ChatUI.colored("Wrong dimension! Go to " + waypointData.dimension.toString(), ChatUI.color_Secondary));
+                        ChatUI.colored("Wrong dimension! Go to " + waypointData.dimension.toString(), ChatUI.color_Secondary)
+                );
                 //context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
                 // Return -1 (command execution failed)
                 return -1;
@@ -113,14 +113,17 @@ public class FollowWaypointCommand {
             playerData.followingWaypointId = waypointId;
 
             // Send a message in chat, confirming the start of a following session
-            context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
+            ChatUI.sendMsg(
+                    context.getSource(),
+                    ChatUI.colored("Following \"" + waypointId + "\"!", ChatUI.color_Positive)
+            );
+            //context.getSource().sendMessage(Text.of("Following \"" + waypointId + "\"!"));
 
             // Return 1 (command executed successfully)
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
             ChatUI.sendError(context.getSource(), e.toString());
-
             // Return -1 (command execution failed)
             return -1;
         }
@@ -128,35 +131,68 @@ public class FollowWaypointCommand {
 
     public static int runUnfollow(CommandContext<ServerCommandSource> context) {
         try {
+            // Get access to the world's gamerules
             GameRules rules = context.getSource().getWorld().getGameRules();
+
+            // Get access to the sendCommandFeedback rule
             GameRules.BooleanRule feedbackRule = rules.get(GameRules.SEND_COMMAND_FEEDBACK);
 
+            // Get the current server
             MinecraftServer server = context.getSource().getServer();
+
+            // Get the serverState for managing the server's PlayerMap instance
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(server);
 
+            // Get the player who sent the follow command
             ServerPlayerEntity player = context.getSource().getPlayer();
+
+            // Get that player's data
             PlayerData playerData = serverState.playerMap.computeIfAbsent(player.getUuid().toString(), uuid -> new PlayerData());
 
+            // Get the server's command manager
             CommandManager commandManager = context.getSource().getServer().getCommandManager();
+
+            // Get the command manager's dispatcher
             CommandDispatcher<ServerCommandSource> dispatcher = commandManager.getDispatcher();
 
-            String command_fire = "trigger ch_toggle";
-
+            // If the player is NOT following a waypoint
             if ((playerData.followingWaypointId == null) || playerData.followingWaypointId.isEmpty()) {
-                context.getSource().sendMessage(Text.of("You're not following a waypoint!"));
+                // Inform them via a chat message
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("You're not following a waypoint!", ChatUI.color_Negative)
+                );
+                //context.getSource().sendMessage(Text.of("You're not following a waypoint!"));
+                // Return -1 (command execution failed)
                 return -1;
             }
 
-            feedbackRule.set(false, server);
-            commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
-            feedbackRule.set(true, server);
-            context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
+            // Generate the command we'll need to toggle off the HUD
+            String command_fire = "trigger ch_toggle";
 
+            // Disable the sendCommandFeedback rule
+            feedbackRule.set(false, server);
+            // Send the toggle command
+            commandManager.execute(dispatcher.parse(command_fire, context.getSource()), command_fire);
+            // Re-enable the sendCommandFeedback rule
+            feedbackRule.set(true, server);
+
+            // Inform the player via a chat message
+            ChatUI.sendMsg(
+                    context.getSource(),
+                    ChatUI.colored("Unfollowed \"" + playerData.followingWaypointId + "\"!", ChatUI.color_Positive)
+            );
+            //context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
+
+            // Clear the player's followingWaypointId
             playerData.followingWaypointId = null;
 
+            // Return 1 (command executed successfully)
             return 1;
         } catch (Exception e) {
+            // Print any exception to the chat
             ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.getMessage()));
+            // Return -1 (command execution failed)
             return -1;
         }
     }

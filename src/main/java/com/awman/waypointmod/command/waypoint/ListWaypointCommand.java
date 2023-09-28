@@ -45,10 +45,14 @@ public class ListWaypointCommand {
             // Find out wether we want to list commands created by a specific user, or all of them
             final boolean listUserCommands = username != null;
 
+            // Send a spacer
+            ChatUI.sendSpacer(context.getSource());
+
             // Send the waypoint list's header in the chat, using a ternary operator to set a coherent title
             ChatUI.sendMsg(
                     context.getSource(),
-                    ChatUI.colored("Listing " + (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:", ChatUI.color_Header));
+                    ChatUI.colored("Listing " + (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:", ChatUI.color_Header)
+            );
             /*context.getSource().sendMessage(Text.of("Listing " +
                     (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:"));*/
 
@@ -60,11 +64,13 @@ public class ListWaypointCommand {
                 // Inform the player via a chat message
                 ChatUI.sendMsg(
                         context.getSource(),
-                        ChatUI.colored("[No waypoints available]", ChatUI.color_Bg));
+                        ChatUI.colored("[No waypoints available]", ChatUI.color_Bg)
+                );
                 //context.getSource().sendMessage(Text.of("[No waypoints available]"));
             } else { // If any waypoints are saved on this server:
                 // Boolean for alternating the list items' colors
                 boolean isOdd = true;
+
                 // For each waypoint:
                 for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
                     // Get the waypoint's name
@@ -74,25 +80,33 @@ public class ListWaypointCommand {
                     WaypointData waypointData = entry.getValue();
 
                     if (
-                        // If the waypoint is public OR the player is an op
+                            // If the waypoint is public OR the player is an op
                             (waypointData.isPublic() || context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel))
-                                    // AND the waypoint was created by the user we're searching for, OR we're listing all waypoints
-                                    && (!listUserCommands || (listUserCommands && waypointData.author.equals(username)))
+                            // AND the waypoint was created by the user we're searching for, OR we're listing all waypoints
+                            && (!listUserCommands || (listUserCommands && waypointData.author.equals(username)))
                     ) {
                         // Print the waypoint's name and author in the chat (just the name if we're filtering by author)
                         ChatUI.sendMsg(
                                 context.getSource(),
-                                ChatUI.colored("-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author)),
-                                        isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg).append(
+                                ChatUI.colored("-> \"",
+                                        isOdd ? ChatUI.color_Main : ChatUI.color_Secondary).append(
+                                ChatUI.colored(waypointName,
+                                        ChatUI.color_Main)).append(
+                                ChatUI.colored((listUserCommands ? "" : ("\", created by @" + waypointData.author)),
+                                        isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg)).append(
                                 ChatUI.styledText(" [+]", Formatting.GREEN,
                                         HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to follow")),
-                                        new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointName))));
+                                        new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointName)))
+                        );
                         /*context.getSource().sendMessage(Text.of(
                                 "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));*/
                         isOdd = !isOdd; // Switch colors for the next item
                     }
                 }
             }
+
+            // Send another spacer
+            ChatUI.sendSpacer(context.getSource());
 
             // Return 1 (command executed successfully)
             return 1;

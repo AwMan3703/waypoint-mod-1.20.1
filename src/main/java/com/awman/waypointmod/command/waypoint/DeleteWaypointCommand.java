@@ -13,7 +13,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
 public class DeleteWaypointCommand {
     // Class for the /waypoint delete command
@@ -47,7 +46,11 @@ public class DeleteWaypointCommand {
             // If the waypointMap doesn't contain the chosen waypoint
             if (!waypointMap.containsKey(waypointId)) {
                 // Send a message in chat to inform the player
-                context.getSource().sendMessage(Text.of("Waypoint not found!"));
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("Waypoint not found!", ChatUI.color_Negative)
+                );
+                //context.getSource().sendMessage(Text.of("Waypoint not found!"));
                 // Return -1 (command execution failed)
                 return -1;
             } else if ( // If the waypointMap DOES contain the chosen waypoint, check if the player DOESN'T have enough permissions
@@ -55,7 +58,11 @@ public class DeleteWaypointCommand {
                     !context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel) // Or the player isn't an op
             ) {
                 // If the player doesn't have the necessary permissions, inform them via a chat message
-                context.getSource().sendMessage(Text.of("Insufficient permissions!"));
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("Insufficient permissions!", ChatUI.color_Negative)
+                );
+                //context.getSource().sendMessage(Text.of("Insufficient permissions!"));
                 // Return -1 (command execution failed)
                 return -1;
             } else { // If no problem is detected:
@@ -66,7 +73,11 @@ public class DeleteWaypointCommand {
                 serverState.markDirty();
 
                 // Send a message in chat, saying the waypoint has been deleted
-                context.getSource().sendMessage(Text.of("Waypoint deleted!"));
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("Waypoint deleted!", ChatUI.color_Positive)
+                );
+                //context.getSource().sendMessage(Text.of("Waypoint deleted!"));
 
                 // Return 1 (command executed successfully)
                 return 1;
