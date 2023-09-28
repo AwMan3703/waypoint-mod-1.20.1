@@ -13,14 +13,9 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TextContent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
 
 public class ListWaypointCommand {
@@ -84,8 +79,7 @@ public class ListWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
-
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.toString()));
             // Return -1 (command execution failed)
             return -1;
         }

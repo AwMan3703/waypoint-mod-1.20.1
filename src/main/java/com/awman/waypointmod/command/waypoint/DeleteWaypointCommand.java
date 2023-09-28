@@ -73,7 +73,7 @@ public class DeleteWaypointCommand {
             }
         } catch (Exception e) {
             // Print any exception to the chat
-            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.toString()));
             // Return -1 (command execution failed)
             return -1;
         }

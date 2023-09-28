@@ -116,7 +116,7 @@ public class FollowWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.toString()));
 
             // Return -1 (command execution failed)
             return -1;
@@ -153,8 +153,7 @@ public class FollowWaypointCommand {
 
             return 1;
         } catch (Exception e) {
-            ChatUI.sendMsg(context.getSource(), ChatUI.errorText("WPM ERROR: " + e, "An error occurred in the Waypoint Mod"));
-
+            ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.getMessage()));
             return -1;
         }
     }
