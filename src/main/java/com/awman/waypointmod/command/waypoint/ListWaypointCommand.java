@@ -89,7 +89,7 @@ public class ListWaypointCommand {
                         ChatUI.sendMsg(
                                 context.getSource(),
                                 ChatUI.colored("-> \"",
-                                        isOdd ? ChatUI.color_Main : ChatUI.color_Secondary).append(
+                                        isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg).append(
                                 ChatUI.colored(waypointName,
                                         ChatUI.color_Main)).append(
                                 ChatUI.colored("\"" + (listUserCommands ? "" : (", created by @" + waypointData.author)),

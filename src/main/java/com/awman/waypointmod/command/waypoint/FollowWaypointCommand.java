@@ -79,7 +79,7 @@ public class FollowWaypointCommand {
                 // If not, inform them via a chat message
                 ChatUI.sendMsg(
                         context.getSource(),
-                        ChatUI.colored("Wrong dimension! Go to " + waypointData.dimension.toString(), ChatUI.color_Secondary)
+                        ChatUI.colored("Wrong dimension! Go to " + waypointData.dimension.toString(), ChatUI.color_Negative)
                 );
                 //context.getSource().sendMessage(Text.of("Wrong dimension! Go to " + waypointData.dimension.toString() + " to follow this waypoint."));
                 // Return -1 (command execution failed)
