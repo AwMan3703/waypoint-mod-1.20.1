@@ -11,7 +11,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 public class InfoWaypointCommand {
     // Class for the /waypoint info command
@@ -47,22 +50,40 @@ public class InfoWaypointCommand {
                 WaypointData waypointData = serverState.waypointMap.get(waypointId);
 
                 // Send the header
-                context.getSource().sendMessage(Text.of("Waypoint data:"));
+                ChatUI.sendSpacer(context.getSource());
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("Waypoint data:", ChatUI.color_Header));
+                //context.getSource().sendMessage(Text.of("Waypoint data:"));
 
                 // Send the waypoint's info (name, author, visibility (not implemented), coordinates and dimension)
-                context.getSource().sendMessage(Text.of(
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("-> ", ChatUI.color_Bg).append(
+                        ChatUI.colored("\"" + waypointId + "\"", ChatUI.color_Main)).append(
+                        ChatUI.colored(", by ", ChatUI.color_Bg)).append(
+                        ChatUI.colored("@" + waypointData.author, ChatUI.color_Secondary)).append(
+                        ChatUI.colored(" (" + (waypointData.isPublic() ? "public" : "private") + "): ", ChatUI.color_Bg)).append(
+                        ChatUI.colored(waypointData.coordinates.toShortString(), ChatUI.color_Main)).append(
+                        ChatUI.colored(" in ", ChatUI.color_Secondary)).append(
+                        ChatUI.colored(waypointData.dimension.toString(), ChatUI.color_Main)).append(
+                        ChatUI.styledText(" [+]", Formatting.GREEN,
+                                HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to follow")),
+                                new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointId))));
+                ChatUI.sendSpacer(context.getSource());
+                /*context.getSource().sendMessage(Text.of(
                         "-> \"" + waypointId + "\", created by " +
                                 "@" + waypointData.author + " (" +
                                 (waypointData.isPublic() ? "public" : "private") + "): [" +
                                 waypointData.coordinates.toShortString() + " in " +
-                                waypointData.dimension.toString() + "]"));
+                                waypointData.dimension.toString() + "]"));*/
 
                 // Return 1 (command executed successfully)
                 return 1;
             }
         } catch (Exception e) {
             // Print any exception to the chat
-            ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.toString()));
+            ChatUI.sendError(context.getSource(), e.toString());
             // Return -1 (command execution failed)
             return -1;
         }

@@ -116,7 +116,7 @@ public class FollowWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.toString()));
+            ChatUI.sendError(context.getSource(), e.toString());
 
             // Return -1 (command execution failed)
             return -1;

@@ -13,7 +13,10 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.CommandManager.RegistrationEnvironment;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
@@ -43,8 +46,11 @@ public class ListWaypointCommand {
             final boolean listUserCommands = username != null;
 
             // Send the waypoint list's header in the chat, using a ternary operator to set a coherent title
-            context.getSource().sendMessage(Text.of("Listing " +
-                    (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:"));
+            ChatUI.sendMsg(
+                    context.getSource(),
+                    ChatUI.colored("Listing " + (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:", ChatUI.color_Header));
+            /*context.getSource().sendMessage(Text.of("Listing " +
+                    (listUserCommands ? (username + "'s") : "all") + " waypoints on this server:"));*/
 
             // Get the serverState for managing the server's WaypointMap instance
             StateSaverAndLoader serverState = StateSaverAndLoader.getServerState(context.getSource().getWorld().getServer());
@@ -52,8 +58,13 @@ public class ListWaypointCommand {
             // If the server's WaypointMap instance is empty:
             if (serverState.waypointMap.isEmpty()) {
                 // Inform the player via a chat message
-                context.getSource().sendMessage(Text.of("[No waypoints available]"));
+                ChatUI.sendMsg(
+                        context.getSource(),
+                        ChatUI.colored("[No waypoints available]", ChatUI.color_Bg));
+                //context.getSource().sendMessage(Text.of("[No waypoints available]"));
             } else { // If any waypoints are saved on this server:
+                // Boolean for alternating the list items' colors
+                boolean isOdd = true;
                 // For each waypoint:
                 for (Map.Entry<String, WaypointData> entry : serverState.waypointMap.entrySet()) {
                     // Get the waypoint's name
@@ -64,13 +75,21 @@ public class ListWaypointCommand {
 
                     if (
                         // If the waypoint is public OR the player is an op
-                        (waypointData.isPublic() || context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel))
-                        // AND the waypoint was created by the user we're searching for, OR we're listing all waypoints
-                        && (!listUserCommands || (listUserCommands && waypointData.author.equals(username)))
+                            (waypointData.isPublic() || context.getSource().hasPermissionLevel(WaypointMod.opPermissionLevel))
+                                    // AND the waypoint was created by the user we're searching for, OR we're listing all waypoints
+                                    && (!listUserCommands || (listUserCommands && waypointData.author.equals(username)))
                     ) {
                         // Print the waypoint's name and author in the chat (just the name if we're filtering by author)
-                        context.getSource().sendMessage(Text.of(
-                                "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));
+                        ChatUI.sendMsg(
+                                context.getSource(),
+                                ChatUI.colored("-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author)),
+                                        isOdd ? ChatUI.color_Secondary : ChatUI.color_Bg).append(
+                                ChatUI.styledText(" [+]", Formatting.GREEN,
+                                        HoverEvent.Action.SHOW_TEXT.buildHoverEvent(Text.of("Click to follow")),
+                                        new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/waypoint follow " + waypointName))));
+                        /*context.getSource().sendMessage(Text.of(
+                                "-> \"" + waypointName + "\"" + (listUserCommands ? "" : (", created by @" + waypointData.author))));*/
+                        isOdd = !isOdd; // Switch colors for the next item
                     }
                 }
             }
@@ -79,7 +98,7 @@ public class ListWaypointCommand {
             return 1;
         } catch (Exception e) {
             // Print any exception to the chat
-            ChatUI.sendMsg(context.getSource(), ChatUI.errorText(e.toString()));
+            ChatUI.sendError(context.getSource(), e.toString());
             // Return -1 (command execution failed)
             return -1;
         }
