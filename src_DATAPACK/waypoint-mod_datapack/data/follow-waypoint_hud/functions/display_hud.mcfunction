@@ -35,3 +35,4 @@ execute if entity @s[tag=ch_nsew] run title @s actionbar ["",{"text":"Distance: 
 
 
 execute if entity @s[tag=ch_arrived] run title @s actionbar ["",{"text":"You have arrived!","color":"gold"}]
+execute if entity @s[tag=ch_arrived] run waypoint unfollow

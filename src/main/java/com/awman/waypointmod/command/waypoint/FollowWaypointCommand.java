@@ -101,7 +101,7 @@ public class FollowWaypointCommand {
             feedbackRule.set(true, server);
             context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
 
-            playerData.followingWaypointId = null;
+            playerData.followingWaypointId = "";
 
             return 1;
         } catch (Exception e) {

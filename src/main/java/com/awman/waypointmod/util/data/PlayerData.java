@@ -9,8 +9,8 @@ public class PlayerData {
 
     public boolean isDeletable() { // Wether it is safe to delete this player's data on save
         return
-                (this.bookmarks.isEmpty()) && // If the player has no bookmarks saved
-                (this.followingWaypointId.isEmpty()) // If the player isn't following any waypoint
+                (this.bookmarks.equals(null) || this.bookmarks.isEmpty()) && // If the player has no bookmarks saved
+                (this.followingWaypointId.equals(null) || this.followingWaypointId.isEmpty()) // If the player isn't following any waypoint
                 // && ( another_condition || another_alternative )
         ;
     }
@@ -20,7 +20,7 @@ public class PlayerData {
     private static final String FOLLOWING_WAYPOINT_ID_NBT_KEY = "fwid";
 
     // This player's bookmarked waypoints
-    public List<String> bookmarks;
+    public List<String> bookmarks = new ArrayList<>();
     // Add a bookmark
     public void addBookmark(String bookmark) {
         if (!this.bookmarks.contains(bookmark)) this.bookmarks.add(bookmark);
@@ -30,7 +30,7 @@ public class PlayerData {
     }
 
     // The waypoint this player is following (if any)
-    public String followingWaypointId;
+    public String followingWaypointId = "";
 
     public PlayerData() {
         this.bookmarks = new ArrayList<>();
