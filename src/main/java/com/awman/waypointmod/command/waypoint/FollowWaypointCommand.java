@@ -185,7 +185,7 @@ public class FollowWaypointCommand {
             //context.getSource().sendMessage(Text.of("Unfollowed \"" + playerData.followingWaypointId + "\"!"));
 
             // Clear the player's followingWaypointId
-            playerData.followingWaypointId = null;
+            playerData.followingWaypointId = "";
 
             // Return 1 (command executed successfully)
             return 1;

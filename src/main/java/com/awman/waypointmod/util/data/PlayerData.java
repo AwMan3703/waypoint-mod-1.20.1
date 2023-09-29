@@ -12,8 +12,8 @@ public class PlayerData {
     // This is done to avoid taking up space in the .dat files without actually holding any data
     public boolean isDeletable() {
         return
-                (this.bookmarks.isEmpty()) // It can be deleted if the player has no bookmarks saved
-                && (this.followingWaypointId.isEmpty()) // AND the player isn't following any waypoint
+                (this.bookmarks.equals(null) || this.bookmarks.isEmpty()) // It can be deleted if the player has no bookmarks saved
+                && (this.followingWaypointId.equals(null) || this.followingWaypointId.isEmpty()) // AND the player isn't following any waypoint
         ;
     }
 
@@ -22,7 +22,7 @@ public class PlayerData {
     private static final String FOLLOWING_WAYPOINT_ID_NBT_KEY = "fwid";
 
     // This player's bookmarked waypoints
-    public List<String> bookmarks;
+    public List<String> bookmarks = new ArrayList<>();
     // Add a bookmark
     public void addBookmark(String bookmark) {
         if (!this.bookmarks.contains(bookmark)) this.bookmarks.add(bookmark);
@@ -32,7 +32,7 @@ public class PlayerData {
     }
 
     // The waypoint this player is following (if any)
-    public String followingWaypointId;
+    public String followingWaypointId = "";
 
     // Constructor
     public PlayerData() {
